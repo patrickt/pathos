@@ -3,7 +3,7 @@ define( {
     { "identifier": "marsh_beans"
     , "display_name": "Marsh beans"
     , "char": 'Ω'
-    , "color": "blue"
+    , "color": "green"
     , "water_threshold":
       { "minimum": 0.25
       , "maximum": 1.25

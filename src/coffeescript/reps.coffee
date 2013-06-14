@@ -1,14 +1,19 @@
 # Copyright (c) 2013 the Pathos team. All rights reserved.
 
-define
+GeneralRep = GeneralRep ? {}
 
-  ItemRep: class
+define
+  GeneralRep: class GeneralRep extends Object
+    toString: ->
+      "<Rep : info = %s>".format(this.__proto__.constructor.name, @info)
+  
+  ItemRep: class extends GeneralRep
     constructor: (@info) ->
-      
+    
     render: (display) =>
       display.draw(@info.geometry.x, @info.geometry.y, @info.getChar(), ROT.Color.toHex(@info.getColor()))
   
-  FarmPlotRep: class
+  FarmPlotRep: class extends GeneralRep
     constructor: (@info) ->
     
     render: (display) =>
@@ -19,10 +24,8 @@ define
         klass = info.getRepClass()
         rep = new klass(info)
         rep.render(display)
-    
-    toString: -> "FarmPlotRep"
   
-  FirmamentRep: class
+  FirmamentRep: class extends GeneralRep
     constructor: (@info) ->
     
     toString: -> "FirmamentRep"

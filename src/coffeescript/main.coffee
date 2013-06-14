@@ -4,11 +4,15 @@ requirejs.config
   baseUrl: 'src/javascript'
   enforceDefine: true
   
-define ['level', 'infos', 'player', 'geometry', 'data/plants.js', 'lib/rot.js'], 
-  (Level, Info, Player, Geom, Plants) ->  
+define ['level', 'infos', 'player', 'geometry', 'manager', 'data/plants.js', 'lib/rot.js'], 
+  (Level, Info, Player, Geom, Manager, Plants) ->  
     @render = =>
       @level.render(@display)
       @player.render(@display)
+      
+    @clicker = (e) =>
+      [x, y] = @display.eventToPosition(e)
+      alert('x = ' + x + ', y =' + y)
     
     @listener = (e) =>
       switch e.keyCode
@@ -25,6 +29,9 @@ define ['level', 'infos', 'player', 'geometry', 'data/plants.js', 'lib/rot.js'],
       @canvas = @display.getContainer()
       @level = new Level.Level()
       @firmament = new Info.Firmament(ROT.Color.fromString("goldenrod"))
+      @manager = new Manager.Manager
+        level: @level
+        canvas: @canvas
       
       mkgeo = (x, y) -> new Geom.Geometry(x,y)
       
@@ -35,12 +42,12 @@ define ['level', 'infos', 'player', 'geometry', 'data/plants.js', 'lib/rot.js'],
       @level.addInfo(@farm)
       @level.addInfo(new Info.Item(mkgeo(2,2), ROT.Color.fromString("yellow"), '∪'))
       
-      
       @player = new Player.Player(mkgeo(10, 10))    
       document.body.appendChild(@canvas)
       @canvas.setAttribute('tabindex', 0)
       @canvas.focus()
       @render()
+      @canvas.onclick = @clicker
       @canvas.onkeydown = @listener
   
     @main()

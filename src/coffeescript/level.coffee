@@ -16,7 +16,8 @@ define ['reps', 'lib/underscore.js'], ->
       @p_generateReps()
     
     p_generateReps: =>
-      _.each @infosToDisplay, (info) =>
+      @reps = []
+      for info in @infosToDisplay
         klass = info.getRepClass()
         rep = new klass(info)
         @reps.push(rep)
