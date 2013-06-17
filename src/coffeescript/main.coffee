@@ -6,9 +6,6 @@ requirejs.config
   
 define ['level', 'infos', 'player', 'geometry', 'manager', 'data/plants.js', 'lib/rot.js'], 
   (Level, Info, Player, Geom, Manager, Plants) ->  
-    @render = =>
-      @level.render(@display)
-      @player.render(@display)
       
     @clicker = (e) =>
       [x, y] = @display.eventToPosition(e)
@@ -16,12 +13,12 @@ define ['level', 'infos', 'player', 'geometry', 'manager', 'data/plants.js', 'li
     
     @listener = (e) =>
       switch e.keyCode
-        when ROT.VK_LEFT  then @player.geometry.x -= 1
-        when ROT.VK_RIGHT then @player.geometry.x += 1
-        when ROT.VK_DOWN  then @player.geometry.y += 1
-        when ROT.VK_UP    then @player.geometry.y -= 1
-      @level.invalidate()
-      @render()
+        when ROT.VK_LEFT  then @manager.player.geometry.x -= 1
+        when ROT.VK_RIGHT then @manager.player.geometry.x += 1
+        when ROT.VK_DOWN  then @manager.player.geometry.y += 1
+        when ROT.VK_UP    then @manager.player.geometry.y -= 1
+        when ROT.VK_S     then alert('Sowing a seed')
+      @manager.renderAll()
   
     @main = () =>
       ROT.Display.Rect.cache = true
@@ -29,9 +26,6 @@ define ['level', 'infos', 'player', 'geometry', 'manager', 'data/plants.js', 'li
       @canvas = @display.getContainer()
       @level = new Level.Level()
       @firmament = new Info.Firmament(ROT.Color.fromString("goldenrod"))
-      @manager = new Manager.Manager
-        level: @level
-        canvas: @canvas
       
       mkgeo = (x, y) -> new Geom.Geometry(x,y)
       
@@ -42,12 +36,18 @@ define ['level', 'infos', 'player', 'geometry', 'manager', 'data/plants.js', 'li
       @level.addInfo(@farm)
       @level.addInfo(new Info.Item(mkgeo(2,2), ROT.Color.fromString("yellow"), '∪'))
       
-      @player = new Player.Player(mkgeo(10, 10))    
+      @manager = new Manager.Manager
+        level:   @level
+        canvas:  @canvas
+        player:  new Player.Player(mkgeo(10, 10))
+        reps:    []
+        display: @display
+      
       document.body.appendChild(@canvas)
       @canvas.setAttribute('tabindex', 0)
       @canvas.focus()
-      @render()
       @canvas.onclick = @clicker
       @canvas.onkeydown = @listener
+      @manager.renderAll()
   
     @main()
