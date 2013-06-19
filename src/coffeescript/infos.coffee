@@ -5,15 +5,37 @@
 define (require, exports, module) ->
   
   Rep = require 'reps'
-  assert = require 'lib/chai.js'
+  assert = require('lib/chai.js').assert
   util = require 'util'
   
-  Plant: class Plant
+  Soul: class Soul
+    constructor: (@geometry) ->
+    
+    parentSoul: null
+    
+    geometryInParent: () ->
+      unless @parentSoul
+        return @geometry
+      @geometry.geometryByAdding(@parentSoul.geometry)
+    
+    
+  ContainerSoul: class ContainerSoul extends Soul
+    constructor: (@geometry) ->
+      super(@geometry)
+      @_childSouls = []
+    
+    util.accessor 'childSouls'
+    
+    addInfo: (i) -> 
+      i.parentSoul = this
+      this['childSouls'].push(i)
+  
+  Plant: class Plant extends Soul
     constructor: (@geometry, @recipe) ->
-      assert.assert.ok(@recipe, "Plant created with empty recipe")
+      super(@geometry)
+      assert.ok(@recipe, "Plant created with empty recipe")
     
     getColor: ->
-      assert.assert.ok(@recipe)
       ROT.Color.fromString(@recipe['color'])
     
     for name in ['identifier', 'char']    
@@ -23,24 +45,23 @@ define (require, exports, module) ->
 
     repClass: Rep.ItemRep
     
-  Item: class
+  Item: class extends Soul
     constructor: (@geometry, @color, @_char) ->
+      super(@geometry)
   
     util.accessor 'char'
     getColor: -> @color
 
     repClass: Rep.ItemRep
 
-  FarmPlot: class FarmPlot
+  FarmPlot: class FarmPlot extends ContainerSoul
     constructor: (@geometry, @color) ->
-      @childInfos = []
+      super(@geometry)
 
     repClass: Rep.FarmPlotRep
 
-    addInfo: (i) ->
-      @childInfos.push(i)
-
-  Firmament: class Firmament
-    constructor: (@color) ->
+  Firmament: class Firmament extends Soul
+    constructor: (@geometry, @color) ->
+      super(@geometry)
   
     repClass: Rep.FirmamentRep

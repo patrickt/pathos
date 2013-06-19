@@ -1,19 +1,31 @@
 
-define ['lib/underscore.js', 'lib/jshashtable.js'], ->
+define ['util', 'lib/underscore.js', 'lib/jshashtable.js'], (util) ->
   Manager: class 
     constructor: (options) ->
       {@level, @canvas, @player, @display} = options
+      @_toplevelSouls = []
       @infosToReps = new Hashtable
-    
-    p_generateReps: =>
-      for info in @level.infosToDisplay
-        rep = new (info.repClass)(info)
-        @infosToReps.put(info, rep)
       
-    renderAll: ->
-      @p_generateReps()
-      for rep in @infosToReps.values()
-        rep.render(display)
+    util.accessor 'toplevelSouls'
+    
+    p_generateTopLevelReps: =>
+      for soul in @toplevelSouls
+        rep = new (soul.repClass)(soul, this)
+        @infosToReps.put(soul, rep)
+        
+    repForSoul: (soul, opts) ->
+      rep = @infosToReps.get(soul)
+      if (not rep) and opts["createIfNecessary"]
+        rep = new (soul.repClass)(soul, this)
+        @infosToReps.put(soul, rep)
+      return rep
+        
+      
+    renderRecursively: ->
+      @p_generateTopLevelReps()
+      for info in @_toplevelSouls
+        rep = @repForSoul(info, { createIfNeeded: true })
+        rep.renderRecursively(display)
       @player.render(@display)
     
     hitTest: (x, y) ->
