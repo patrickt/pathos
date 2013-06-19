@@ -4,8 +4,8 @@ requirejs.config
   baseUrl: 'src/javascript'
   
   
-define ['level', 'infos', 'player', 'geometry', 'locus', 'manager', 'data/plants.js', 'lib/rot.js'], 
-  (Level, Info, Player, Geom, Locus, Manager, Plants) ->  
+define ['soul', 'player', 'geometry', 'locus', 'manager', 'data/plants.js', 'lib/rot.js'], 
+  (Soul, Player, Geom, Locus, Manager, Plants) ->  
       
     @clicker = (e) =>
       [x, y] = @display.eventToPosition(e)
@@ -23,20 +23,14 @@ define ['level', 'infos', 'player', 'geometry', 'locus', 'manager', 'data/plants
     ROT.Display.Rect.cache = true
     @display = new ROT.Display(width: 80, height: 25, fontSize:24)
     @canvas = @display.getContainer()
-    @level = new Level.Level()
-    @firmament = new Info.Firmament(null, ROT.Color.fromString("goldenrod"))
+    @firmament = new Soul.Firmament(null, ROT.Color.fromString("goldenrod"))
     
     mkgeo = (x, y) -> new Geom.Geometry(x,y)
     
-    @farm = new Info.FarmPlot(mkgeo(50, 10), ROT.Color.fromString("green"))
-    @farm.addInfo(new Info.Plant(mkgeo(2,2), Plants.marsh_beans))
+    @farm = new Soul.FarmPlot(mkgeo(50, 10), ROT.Color.fromString("green"))
+    @farm.addSoul(new Soul.Plant(mkgeo(2,0), Plants.marsh_beans))
 
-    @level.addInfo(@firmament)
-    @level.addInfo(@farm)
-    @level.addInfo(new Info.Item(mkgeo(4,4), ROT.Color.fromString("yellow"), '∪'))
-    
     @manager = new Manager.Manager
-      level:   @level
       canvas:  @canvas
       player:  new Player.Player(mkgeo(10, 10))
       display: @display

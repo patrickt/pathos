@@ -6,43 +6,43 @@ define (require, exports, module) ->
   _ = require("../../lib/underscore")
   
   Rep: class Rep extends Object
-    constructor: (@info, @_manager) ->
+    constructor: (@soul, @_manager) ->
       
     renderRecursively: (display, opts) ->
       
       
     util.accessor 'manager'
     toString: ->
-      "<Rep : info = %s>".format(this.__proto__.constructor.name, @info)
+      "<Rep : soul = %s>".format(this.__proto__.constructor.name, @soul)
   
   ContainerRep: class ContainerRep extends Rep
     
-    constructor: (@info, @_manager) ->
+    constructor: (@soul, @_manager) ->
     
     childReps: -> 
       assert.ok(@_manager)
-      (@_manager.repForSoul(ch, {createIfNecessary: true}) for ch in @info.childSouls)
+      (@_manager.repForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
     
     renderRecursively: (d, opts) ->
       opts ?= {}
       super(d, opts)
       for rep in @childReps()
-        assert.ok(@info)
-        assert.ok(@info.geometryInParent())
-        g = rep.info.geometryInParent()
-        opts["geometry"] = rep.info.geometryInParent()
+        assert.ok(@soul)
+        assert.ok(@soul.geometryInParent())
+        g = rep.soul.geometryInParent()
+        opts["geometry"] = rep.soul.geometryInParent()
         rep.renderRecursively(d, opts)
   
   ItemRep: class extends Rep
     renderRecursively: (display, opts) =>
-      geom = opts["geometry"] ? @info.geometry
-      display.draw(geom.x, geom.y, @info.char, ROT.Color.toHex(@info.getColor()))
+      geom = opts["geometry"] ? @soul.geometry
+      display.draw(geom.x, geom.y, @soul.char, ROT.Color.toHex(@soul.getColor()))
   
   FarmPlotRep: class extends ContainerRep
     renderRecursively: (display, opts) =>
       for x in [0..4]
         for y in [0..4]
-          display.draw(@info.geometryInParent().x + x, @info.geometry.y + y, '☌', ROT.Color.toHex(@info.color))
+          display.draw(@soul.geometryInParent().x + x, @soul.geometry.y + y, '☌', ROT.Color.toHex(@soul.color))
       super(display, opts)
   
   FirmamentRep: class extends Rep
@@ -53,4 +53,4 @@ define (require, exports, module) ->
       height = display._options.height
       for x in [0..width]
         for y in [0..height]
-          display.draw(x, y, '.', ROT.Color.toHex(@info.color))
+          display.draw(x, y, '.', ROT.Color.toHex(@soul.color))

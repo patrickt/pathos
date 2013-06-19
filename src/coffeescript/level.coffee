@@ -3,9 +3,9 @@
 define ['reps', 'lib/underscore.js'], ->
   Level: class extends Object
     constructor: ->
-      @infosToDisplay = []
+      @soulsToDisplay = []
 
-    addInfo: (f) =>
-      @infosToDisplay.push(f)
+    addSoul: (f) =>
+      @soulsToDisplay.push(f)
     
     

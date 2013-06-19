@@ -26,7 +26,7 @@ define (require, exports, module) ->
     
     util.accessor 'childSouls'
     
-    addInfo: (i) -> 
+    addSoul: (i) -> 
       i.parentSoul = this
       this['childSouls'].push(i)
   
