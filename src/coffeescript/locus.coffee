@@ -1,9 +1,9 @@
 'use strict'
 
-Function::accessor = (prop, desc) ->
-    Object.defineProperty this.prototype, prop, desc
-
-define
+define ['util'], (util) ->
+  
   Locus: class
-    constructor: -> (@_geometry)
-      
+    constructor: (@_geometry) -> 
+    
+    util.accessor 'geometry'
+    

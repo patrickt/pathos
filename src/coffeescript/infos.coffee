@@ -1,41 +1,46 @@
+"use strict"
+
 # Copyright (c) 2013 the Pathos team. All rights reserved.
 
-define ['reps', 'lib/chai.js', 'lib/rot.js'], (Rep, assert) ->
+define (require, exports, module) ->
   
-  Plant: class
+  Rep = require 'reps'
+  assert = require 'lib/chai.js'
+  util = require 'util'
+  
+  Plant: class Plant
     constructor: (@geometry, @recipe) ->
       assert.assert.ok(@recipe, "Plant created with empty recipe")
     
     getColor: ->
       assert.assert.ok(@recipe)
       ROT.Color.fromString(@recipe['color'])
-      
-    getChar: -> @recipe['char']
     
-    getRepClass: ->
-      Rep.ItemRep
-  
+    for name in ['identifier', 'char']    
+      Object.defineProperty this.prototype, name, 
+        get: -> @recipe[name]
+        set: (x) -> @recipe[name] = x
+
+    repClass: Rep.ItemRep
+    
   Item: class
-    constructor: (@geometry, @color, @char) ->
-      
-    getChar: -> @char
-    getColor: -> @color
-    
-    getRepClass: ->
-      Rep.ItemRep
+    constructor: (@geometry, @color, @_char) ->
   
-  FarmPlot: class
+    util.accessor 'char'
+    getColor: -> @color
+
+    repClass: Rep.ItemRep
+
+  FarmPlot: class FarmPlot
     constructor: (@geometry, @color) ->
       @childInfos = []
-    
-    getRepClass: ->
-      Rep.FarmPlotRep
-    
+
+    repClass: Rep.FarmPlotRep
+
     addInfo: (i) ->
       @childInfos.push(i)
-  
-  Firmament: class
+
+  Firmament: class Firmament
     constructor: (@color) ->
-      
-    getRepClass: -> 
-      Rep.FirmamentRep
+  
+    repClass: Rep.FirmamentRep

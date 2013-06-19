@@ -9,7 +9,7 @@ define
   
   ItemRep: class extends GeneralRep
     render: (display) =>
-      display.draw(@info.geometry.x, @info.geometry.y, @info.getChar(), ROT.Color.toHex(@info.getColor()))
+      display.draw(@info.geometry.x, @info.geometry.y, @info.char, ROT.Color.toHex(@info.getColor()))
   
   FarmPlotRep: class extends GeneralRep
     render: (display) =>
@@ -17,7 +17,7 @@ define
         for y in [0..4]
           display.draw(@info.geometry.x + x, @info.geometry.y + y, '☌', ROT.Color.toHex(@info.color))
       for info in @info.childInfos
-        klass = info.getRepClass()
+        klass = info.repClass
         rep = new klass(info)
         rep.render(display)
   

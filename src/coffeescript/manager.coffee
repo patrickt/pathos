@@ -1,22 +1,21 @@
 
-define ['lib/underscore.js'], ->
+define ['lib/underscore.js', 'lib/jshashtable.js'], ->
   Manager: class 
     constructor: (options) ->
-      {@level, @canvas, @player, @reps, @display} = options
+      {@level, @canvas, @player, @display} = options
+      @infosToReps = new Hashtable
     
     p_generateReps: =>
-      @reps = []
       for info in @level.infosToDisplay
-        klass = info.getRepClass()
-        rep = new klass(info)
-        @reps.push(rep)
+        rep = new (info.repClass)(info)
+        @infosToReps.put(info, rep)
       
     renderAll: ->
       @p_generateReps()
-      for rep in @reps
-        rep.render(@display)
+      for rep in @infosToReps.values()
+        rep.render(display)
       @player.render(@display)
     
     hitTest: (x, y) ->
-      for entity in @level.reps
+      for entity in @infosToReps.values()
         entity.recursivelyHitTest(x, y)
