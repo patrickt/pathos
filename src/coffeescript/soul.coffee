@@ -4,7 +4,7 @@
 
 define (require, exports, module) ->
   
-  Rep = require 'reps'
+  Body = require 'bodies'
   assert = require('lib/chai.js').assert
   util = require 'util'
   
@@ -43,7 +43,7 @@ define (require, exports, module) ->
         get: -> @recipe[name]
         set: (x) -> @recipe[name] = x
 
-    repClass: Rep.ItemRep
+    bodyClass: Body.ItemBody
     
   Item: class extends Soul
     constructor: (@geometry, @color, @_char) ->
@@ -52,16 +52,16 @@ define (require, exports, module) ->
     util.accessor 'char'
     getColor: -> @color
 
-    repClass: Rep.ItemRep
+    bodyClass: Body.ItemBody
 
   FarmPlot: class FarmPlot extends ContainerSoul
     constructor: (@geometry, @color) ->
       super(@geometry)
 
-    repClass: Rep.FarmPlotRep
+    bodyClass: Body.FarmPlotBody
 
   Firmament: class Firmament extends Soul
     constructor: (@geometry, @color) ->
       super(@geometry)
   
-    repClass: Rep.FirmamentRep
+    bodyClass: Body.FirmamentBody

@@ -4,8 +4,8 @@ requirejs.config
   baseUrl: 'src/javascript'
   
   
-define ['soul', 'player', 'geometry', 'locus', 'manager', 'data/plants.js', 'lib/rot.js'], 
-  (Soul, Player, Geom, Locus, Manager, Plants) ->  
+define ['soul', 'player', 'geometry', 'manager', 'data/plants.js', 'lib/rot.js'], 
+  (Soul, Player, Geom, Manager, Plants) ->  
       
     @clicker = (e) =>
       [x, y] = @display.eventToPosition(e)

@@ -5,7 +5,7 @@ define (require, exports, module) ->
   assert = require("../../lib/chai").assert
   _ = require("../../lib/underscore")
   
-  Rep: class Rep extends Object
+  Body: class Body extends Object
     constructor: (@soul, @_manager) ->
       
     renderRecursively: (display, opts) ->
@@ -13,40 +13,40 @@ define (require, exports, module) ->
       
     util.accessor 'manager'
     toString: ->
-      "<Rep : soul = %s>".format(this.__proto__.constructor.name, @soul)
+      "<Body : soul = %s>".format(this.__proto__.constructor.name, @soul)
   
-  ContainerRep: class ContainerRep extends Rep
+  ContainerBody: class ContainerBody extends Body
     
     constructor: (@soul, @_manager) ->
     
-    childReps: -> 
+    childBodies: -> 
       assert.ok(@_manager)
-      (@_manager.repForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
+      (@_manager.bodyForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
     
     renderRecursively: (d, opts) ->
       opts ?= {}
       super(d, opts)
-      for rep in @childReps()
+      for body in @childBodies()
         assert.ok(@soul)
         assert.ok(@soul.geometryInParent())
-        g = rep.soul.geometryInParent()
-        opts["geometry"] = rep.soul.geometryInParent()
-        rep.renderRecursively(d, opts)
+        g = body.soul.geometryInParent()
+        opts["geometry"] = body.soul.geometryInParent()
+        body.renderRecursively(d, opts)
   
-  ItemRep: class extends Rep
+  ItemBody: class extends Body
     renderRecursively: (display, opts) =>
       geom = opts["geometry"] ? @soul.geometry
       display.draw(geom.x, geom.y, @soul.char, ROT.Color.toHex(@soul.getColor()))
   
-  FarmPlotRep: class extends ContainerRep
+  FarmPlotBody: class extends ContainerBody
     renderRecursively: (display, opts) =>
       for x in [0..4]
         for y in [0..4]
           display.draw(@soul.geometryInParent().x + x, @soul.geometry.y + y, '☌', ROT.Color.toHex(@soul.color))
       super(display, opts)
   
-  FirmamentRep: class extends Rep
-    toString: -> "FirmamentRep"
+  FirmamentBody: class extends Body
+    toString: -> "FirmamentBody"
     
     renderRecursively: (display) =>
       width = display._options.width

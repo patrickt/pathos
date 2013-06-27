@@ -4,34 +4,34 @@ define ['util', 'lib/underscore.js', 'lib/jshashtable.js'], (util) ->
     constructor: (options) ->
       {@level, @canvas, @player, @display} = options
       @_toplevelSouls = []
-      @soulsToReps = new Hashtable
+      @soulsToBodies = new Hashtable
       
     util.accessor 'toplevelSouls'
     
-    p_generateTopLevelReps: =>
+    p_generateTopLevelBodies: =>
       for soul in @toplevelSouls
-        rep = new (soul.repClass)(soul, this)
-        @soulsToReps.put(soul, rep)
+        body = new (soul.bodyClass)(soul, this)
+        @soulsToBodies.put(soul, body)
         
-    repForSoul: (soul, opts) ->
-      rep = @soulsToReps.get(soul)
-      if (not rep) and opts["createIfNecessary"]
-        rep = new (soul.repClass)(soul, this)
-        @soulsToReps.put(soul, rep)
-      return rep
+    bodyForSoul: (soul, opts) ->
+      body = @soulsToBodies.get(soul)
+      if (not body) and opts["createIfNecessary"]
+        body = new (soul.bodyClass)(soul, this)
+        @soulsToBodies.put(soul, body)
+      return body
         
       
     renderRecursively: ->
-      @p_generateTopLevelReps()
+      @p_generateTopLevelBodies()
       for soul in @_toplevelSouls
-        rep = @repForSoul(soul, { createIfNeeded: true })
-        rep.renderRecursively(display)
+        body = @bodyForSoul(soul, { createIfNeeded: true })
+        body.renderRecursively(display)
       @player.render(@display)
     
     hitTest: (x, y) ->
-      hitRep = null
-      for entity in @soulsToReps.values()
-        hitRep = entity.recursivelyHitTest(x, y)
-        if hitRep
+      hitBody = null
+      for entity in @soulsToBodies.values()
+        hitBody = entity.recursivelyHitTest(x, y)
+        if hitBody
           break
-      hitRep
+      hitBody
