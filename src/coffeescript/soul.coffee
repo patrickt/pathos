@@ -4,20 +4,21 @@
 
 define (require, exports, module) ->
   
-  Body = require 'bodies'
+  Body = require 'body'
   assert = require('lib/chai.js').assert
   util = require 'util'
   
   Soul: class Soul
     constructor: (@geometry) ->
+      assert.ok(@geometry)
     
     parentSoul: null
     
     geometryInParent: () ->
-      unless @parentSoul
-        return @geometry
-      @geometry.geometryByAdding(@parentSoul.geometry)
-    
+      if @parentSoul
+        @geometry.geometryByAdding(@parentSoul.geometry)
+      else 
+        @geometry
     
   ContainerSoul: class ContainerSoul extends Soul
     constructor: (@geometry) ->
