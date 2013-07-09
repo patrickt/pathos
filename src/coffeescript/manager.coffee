@@ -1,12 +1,17 @@
 
-define ['util', 'lib/underscore.js', 'lib/jshashtable.js'], (util) ->
+define (require, exports, module ) ->
+  
+  require("../../lib/jshashtable")
+  util = require("util")
+  
+  
   Manager: class 
     constructor: (options) ->
       {@level, @canvas, @player, @display} = options
       @_toplevelSouls = []
       @soulsToBodies = new Hashtable
       
-    util.accessor 'toplevelSouls'
+    util.accessor('toplevelSouls')
     
     p_generateTopLevelBodies: =>
       for soul in @toplevelSouls
@@ -28,9 +33,11 @@ define ['util', 'lib/underscore.js', 'lib/jshashtable.js'], (util) ->
         body.renderRecursively(display)
       @player.render(@display)
     
-    hitTest: (x, y) ->
+    recursivelyHitTest: (x, y) ->
       hitBody = null
-      for entity in @soulsToBodies.values()
+      souls = @soulsToBodies.values()
+      souls.reverse()
+      for entity in souls
         hitBody = entity.recursivelyHitTest(x, y)
         if hitBody
           break

@@ -10,6 +10,9 @@ define ['soul', 'player', 'geometry', 'manager', 'data/plants.js', 'lib/rot.js']
     @clicker = (e) =>
       [x, y] = @display.eventToPosition(e)
       alert('x = ' + x + ', y =' + y)
+      fudge = @manager.recursivelyHitTest(x,y)
+      if fudge
+        alert(fudge.toString())
     
     @listener = (e) =>
       switch e.keyCode
@@ -23,11 +26,11 @@ define ['soul', 'player', 'geometry', 'manager', 'data/plants.js', 'lib/rot.js']
     ROT.Display.Rect.cache = true
     @display = new ROT.Display(width: 80, height: 25, fontSize:24)
     @canvas = @display.getContainer()
-    @firmament = new Soul.Firmament(null, ROT.Color.fromString("goldenrod"))
     
     mkgeo = (x, y) -> new Geom.Geometry(x,y)
     
-    @farm = new Soul.FarmPlot(mkgeo(50, 10), ROT.Color.fromString("green"))
+    @firmament = new Soul.Firmament(new Geom.Geometry(0, 0, 80, 25), ROT.Color.fromString("goldenrod"))
+    @farm = new Soul.FarmPlot(new Geom.Geometry(50, 10, 4, 4), ROT.Color.fromString("green"))
     @farm.addSoul(new Soul.Plant(mkgeo(2,0), Plants.marsh_beans))
 
     @manager = new Manager.Manager
