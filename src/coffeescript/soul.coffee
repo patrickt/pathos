@@ -14,11 +14,16 @@ define (require, exports, module) ->
     
     parentSoul: null
     
+    zOrdering: 0
+    
     geometryInParent: () ->
       if @parentSoul
         @_geometry.geometryByAdding(@parentSoul.geometry)
       else 
         @_geometry
+    
+    toString: ->
+      "[%s : geometry = %s]".format(@constructor.name, @_geometry.toString())
     
   ContainerSoul: class ContainerSoul extends Soul
     constructor: (@_geometry) ->
@@ -38,6 +43,8 @@ define (require, exports, module) ->
       
     util.accessor 'recipe'
     
+    zOrdering: 2
+    
     getColor: ->
       ROT.Color.fromString(@recipe['color'])
     
@@ -51,6 +58,8 @@ define (require, exports, module) ->
   Item: class extends Soul
     constructor: (@_geometry, @color, @_char) ->
       super(@_geometry)
+    
+    zOrdering: 1
   
     util.accessor 'char'
     getColor: -> @color
@@ -58,12 +67,18 @@ define (require, exports, module) ->
     bodyClass: Body.ItemBody
 
   FarmPlot: class FarmPlot extends ContainerSoul
+    
+    zOrdering: 0
+    
     constructor: (@_geometry, @color) ->
       super(@_geometry)
 
     bodyClass: Body.FarmPlotBody
 
   Firmament: class Firmament extends Soul
+    
+    zOrdering: -10
+    
     constructor: (@geometry, @color) ->
       super(@geometry)
   

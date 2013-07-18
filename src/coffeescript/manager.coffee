@@ -3,11 +3,15 @@ define (require, exports, module ) ->
   
   require("../../lib/jshashtable")
   util = require("util")
+  assert = require("../../lib/chai").assert
   
   
   Manager: class 
     constructor: (options) ->
-      {@level, @canvas, @player, @display} = options
+      {@canvas, @player, @display} = options
+      assert.ok(@canvas, "needs canvas")
+      assert.ok(@player, "needs player")
+      assert.ok(@display, "needs display")
       @_toplevelSouls = []
       @soulsToBodies = new Hashtable
       
@@ -30,15 +34,15 @@ define (require, exports, module ) ->
       @p_generateTopLevelBodies()
       for soul in @_toplevelSouls
         body = @bodyForSoul(soul, { createIfNeeded: true })
-        body.renderRecursively(display)
+        body.renderRecursively(@display)
       @player.render(@display)
     
     recursivelyHitTest: (x, y) ->
       hitBody = null
-      souls = @soulsToBodies.values()
-      souls.reverse()
-      for entity in souls
-        hitBody = entity.recursivelyHitTest(x, y)
+      hitSou
+      for soul in @_toplevelSouls
+        body = this.bodyForSoul(soul)
+        hitBody = body.recursivelyHitTest(x, y)
         if hitBody
           break
       hitBody

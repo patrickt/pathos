@@ -3,30 +3,23 @@
 define (require, exports, module) ->
   util = require("util")
   assert = require("../../lib/chai").assert
-  _ = require("../../lib/underscore")
+  require("lib/underscore.js")
   
-  Body: class Body extends Object
-    constructor: (@soul, @_manager) ->
-      assert.ok(@_manager, "Body created without manager")
-    
-    util.accessor 'manager'
+  class Body
+    constructor: (@soul, @manager) ->
+      assert.ok(@manager, "Body created without manager")
     
     recursivelyHitTest: (x, y) ->
-      if @soul.geometry.containsPoint(x,y)
-        this
-      else
-        null
+      if @soul.geometry.containsPoint(x,y) then this else null
       
     renderRecursively: (display, opts) ->
       assert.ok(false, "Body.renderRecursively is abstract")
       
     toString: ->
-      "<Body : soul = %s>".format(this.__proto__.constructor.name, @soul)
+      "[%s : %s]".format(@constructor.name, @soul.toString())
   
-  ContainerBody: class ContainerBody extends Body
+  class ContainerBody extends Body
     
-    constructor: (@soul, @_manager) ->
-      
     recursivelyHitTest: (x, y) ->
       result = null
       for child in @childBodies()
@@ -37,8 +30,8 @@ define (require, exports, module) ->
           
     
     childBodies: -> 
-      assert.ok(@_manager, "manager must exist")
-      (@_manager.bodyForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
+      assert.ok(@manager, "manager must exist")
+      (@manager.bodyForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
     
     renderRecursively: (d, opts = {}) ->
       for body in @childBodies()
@@ -48,30 +41,23 @@ define (require, exports, module) ->
         opts["geometry"] = body.soul.geometryInParent()
         body.renderRecursively(d, opts)
   
-  ItemBody: class extends Body
-    
-    toString: -> "ItemBody"
+  class ItemBody extends Body
     
     renderRecursively: (display, opts) ->
       geom = opts["geometry"] ? @soul.geometry
       display.draw(geom.x, geom.y, @soul.char, ROT.Color.toHex(@soul.getColor()))
   
-  FarmPlotBody: class extends ContainerBody
-    
-    toString: -> "FarmPlotBody"
+  class FarmPlotBody extends ContainerBody
     
     renderRecursively: (display, opts) =>
-      for x in [0..4]
-        for y in [0..4]
-          display.draw(@soul.geometryInParent().x + x, @soul.geometry.y + y, '☌', ROT.Color.toHex(@soul.color))
+      @soul.geometry.eachSquare (x, y) =>
+        display.draw(x, y, '☌', ROT.Color.toHex(@soul.color))
       super(display, opts)
   
-  FirmamentBody: class extends Body
-    toString: -> "FirmamentBody"
+  class FirmamentBody extends Body
     
     renderRecursively: (display) ->
-      width = display._options.width
-      height = display._options.height
-      for x in [0..width]
-        for y in [0..height]
-          display.draw(x, y, '.', ROT.Color.toHex(@soul.color))
+      @soul.geometry.eachSquare (x, y) =>
+        display.draw(x, y, '.', ROT.Color.toHex(@soul.color))
+    
+  return { ItemBody, FarmPlotBody, FirmamentBody}
