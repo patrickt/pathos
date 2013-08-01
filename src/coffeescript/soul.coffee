@@ -16,11 +16,14 @@ define (require, exports, module) ->
     
     zOrdering: 0
     
-    geometryInParent: () ->
-      if @parentSoul
-        @_geometry.geometryByAdding(@parentSoul.geometry)
-      else 
-        @_geometry
+    @property 'geometryInParent',
+      get: -> 
+        if @parentSoul
+          @_geometry.geometryByAdding(@parentSoul.geometry)
+        else 
+          @_geometry
+
+
     
     toString: ->
       "[%s : geometry = %s]".format(@constructor.name, @_geometry.toString())

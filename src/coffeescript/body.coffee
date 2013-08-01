@@ -14,6 +14,12 @@ define (require, exports, module) ->
       
     renderRecursively: (display, opts) ->
       assert.ok(false, "Body.renderRecursively is abstract")
+    
+    @property 'geometry', 
+      get: -> @soul.geometry
+    
+    @property 'geometryInParent',
+      get: -> @soul.geometryInParent
       
     toString: ->
       "[%s : %s]".format(@constructor.name, @soul.toString())
@@ -21,24 +27,14 @@ define (require, exports, module) ->
   class ContainerBody extends Body
     
     recursivelyHitTest: (x, y) ->
-      result = null
-      for child in @childBodies
-        g = child.soul.geometryInParent()
-        if g.containsPoint(x,y)
-          result = child
-      result or super
+      _.find(@childBodies, (child) -> child.geometryInParent.containsPoint(x, y)) or super
     
     @property 'childBodies', 
-      get: -> 
-        assert.ok(@manager, "manager must exist")
-        (@manager.bodyForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
+      get: -> (@manager.bodyForSoul(ch, createIfNecessary: true) for ch in @soul.childSouls)
     
     renderRecursively: (d, opts = {}) ->
       for body in @childBodies
-        assert.ok(@soul, "soul must exist")
-        assert.ok(@soul.geometryInParent(), "needs geometry in parent")
-        g = body.soul.geometryInParent()
-        opts["geometry"] = body.soul.geometryInParent()
+        opts["geometry"] = body.soul.geometryInParent
         body.renderRecursively(d, opts)
   
   class ItemBody extends Body
