@@ -1,6 +1,8 @@
 # Copyright (c) 2013 the Pathos team. All rights reserved.
 # Geometries encapsulate position and size.
 
+"use strict"
+
 define (require) ->
   
   assert = require('lib/chai.js').assert

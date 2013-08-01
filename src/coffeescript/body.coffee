@@ -1,5 +1,7 @@
 # Copyright (c) 2013 the Pathos team. All rights reserved.
 
+"use strict"
+
 define (require, exports, module) ->
   util = require("util")
   assert = require("../../lib/chai").assert

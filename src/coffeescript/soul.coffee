@@ -1,5 +1,7 @@
 # Copyright (c) 2013 the Pathos team. All rights reserved.
 
+"use strict"
+
 define (require, exports, module) ->
   
   Body = require('body')
