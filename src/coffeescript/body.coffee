@@ -5,6 +5,7 @@ define (require, exports, module) ->
   assert = require("../../lib/chai").assert
   require("lib/underscore.js")
   
+  # abstract
   class Body
     constructor: (@soul, @manager) ->
       assert.ok(@manager, "Body created without manager")
@@ -27,6 +28,8 @@ define (require, exports, module) ->
   class ContainerBody extends Body
     
     recursivelyHitTest: (x, y) ->
+      # test all children, converting the children's coordinates into absolute space
+      # todo: modify x and y rather than recomputing parent geometry every time
       _.find(@childBodies, (child) -> child.geometryInParent.containsPoint(x, y)) or super
     
     @property 'childBodies', 
@@ -34,21 +37,20 @@ define (require, exports, module) ->
     
     renderRecursively: (d, opts = {}) ->
       for body in @childBodies
-        opts["geometry"] = body.soul.geometryInParent
-        body.renderRecursively(d, opts)
+        body.renderRecursively(d, _.extend(opts, geometry: body.soul.geometryInParent))
   
   class ItemBody extends Body
     
-    renderRecursively: (display, opts) ->
-      geom = opts["geometry"] ? @soul.geometry
+    renderRecursively: (display, opts = {}) ->
+      geom = opts.geometry ? @soul.geometry
       display.draw(geom.x, geom.y, @soul.char, ROT.Color.toHex(@soul.getColor()))
   
   class FarmPlotBody extends ContainerBody
     
-    renderRecursively: (display, opts) =>
+    renderRecursively: (display, opts) ->
       @soul.geometry.eachSquare (x, y) =>
-        display.draw(x, y, '☌', ROT.Color.toHex(@soul.color))
-      super(display, opts)
+        display.draw(x, y, '=', ROT.Color.toHex(@soul.color))
+      super
   
   class FirmamentBody extends Body
     
@@ -56,4 +58,4 @@ define (require, exports, module) ->
       @soul.geometry.eachSquare (x, y) =>
         display.draw(x, y, '.', ROT.Color.toHex(@soul.color))
     
-  return { ItemBody, FarmPlotBody, FirmamentBody}
+  return { ItemBody, FarmPlotBody, FirmamentBody }

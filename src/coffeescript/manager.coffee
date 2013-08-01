@@ -24,7 +24,7 @@ define (require, exports, module ) ->
         
     bodyForSoul: (soul, opts = {}) ->
       body = @soulsToBodies.get(soul)
-      if (not body) and opts["createIfNecessary"]
+      if (not body) and opts.createIfNecessary
         body = new (soul.bodyClass)(soul, this)
         @soulsToBodies.put(soul, body)
       return body

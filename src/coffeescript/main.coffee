@@ -10,12 +10,10 @@ define (require, exports, module) ->
   Soul = require('soul')
   Player = require 'player'
   Manager = require 'manager'
-  Plants = require '../../data/plants'
+  Plants = require 'data/plants.js'
   Geometry = require('geometry').Geometry
   require '../../lib/rot'
   
-  _.extend(this, require('geometry'))
-      
   @clicker = (e) =>
     [x, y] = @display.eventToPosition(e)
     alert('x = ' + x + ', y =' + y)
@@ -42,11 +40,12 @@ define (require, exports, module) ->
 
   @manager = new Manager.Manager
     canvas:  @canvas
-    player:  new Player.Player(new @Geometry(10, 10))
+    player:  new Player.Player(new Geometry(10, 10))
     display: @display
 
   @manager.toplevelSouls.push(@firmament)
   @manager.toplevelSouls.push(@farm)
+  @manager.toplevelSouls.push(new Soul.Plant(new Geometry(20, 20), Plants.tridentvine))
 
   document.body.appendChild(@canvas)
   @canvas.setAttribute('tabindex', 0)
