@@ -16,6 +16,8 @@ define (require, exports, module) ->
     
     zOrdering: 0
     
+    isFixed: true
+    
     @property 'geometryInParent',
       get: -> 
         if @parentSoul
@@ -23,7 +25,10 @@ define (require, exports, module) ->
         else 
           @_geometry
 
-
+    removeSoulRecursively: ->
+      
+    @property 'displayName',
+      get: -> @toString()
     
     toString: ->
       "[%s : geometry = %s]".format(@constructor.name, @_geometry.toString())
@@ -38,6 +43,12 @@ define (require, exports, module) ->
     addSoul: (i) -> 
       i.parentSoul = this
       @_childSouls.push(i)
+      
+    removeSoulRecursively: (i) ->
+      if i in @_childSouls
+        @_childSouls = _.without(@_childSouls, i)
+      else
+        soul.removeSoulRecursively(i) for soul in @_childSouls
   
   Plant: class Plant extends Soul
     constructor: (@_geometry, @_recipe) ->
@@ -45,6 +56,8 @@ define (require, exports, module) ->
       assert.ok(@_recipe, "Plant created with empty recipe")
       
     util.accessor 'recipe'
+    
+    isFixed: false
     
     zOrdering: 2
     
@@ -55,6 +68,9 @@ define (require, exports, module) ->
       Object.defineProperty this.prototype, name, 
         get: -> @recipe[name]
         set: (x) -> @recipe[name] = x
+    
+    @property 'displayName',
+      get: -> @_recipe.display_name
 
     bodyClass: Body.ItemBody
     

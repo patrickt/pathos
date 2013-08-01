@@ -1,3 +1,4 @@
+"use strict"
 
 define (require, exports, module ) ->
   
@@ -28,8 +29,30 @@ define (require, exports, module ) ->
         body = new (soul.bodyClass)(soul, this)
         @soulsToBodies.put(soul, body)
       return body
-        
+    
+    keyDown: (e) ->
+      switch e.keyCode
+        when ROT.VK_LEFT  then @player.geometry.x -= 1
+        when ROT.VK_RIGHT then @player.geometry.x += 1
+        when ROT.VK_DOWN  then @player.geometry.y += 1
+        when ROT.VK_UP    then @player.geometry.y -= 1
+        when ROT.VK_S     then alert('Sowing a seed')
+        when ROT.VK_E     then @pluck()
+      @renderRecursively()
       
+    pluck: ->
+      pos = @player.geometry
+      plant = @recursivelyHitTest(pos.x, pos.y).soul
+      unless plant.isFixed
+        alert('YOU HAVE GAINED A %s!'.format(plant.displayName))
+        @removeSoulRecursively(plant)
+    
+    removeSoulRecursively: (e) ->
+      if e in @toplevelSouls
+        @_toplevelSouls = _.without(@toplevelSouls, e)
+      else
+        soul.removeSoulRecursively(e) for soul in @_toplevelSouls
+    
     renderRecursively: ->
       @p_generateTopLevelBodies()
       for soul in @_toplevelSouls

@@ -1,5 +1,7 @@
 # Copyright (c) 2013 the Pathos team. All rights reserved.
 
+"use strict"
+
 requirejs.config
   baseUrl: 'src/javascript'
   
@@ -21,15 +23,6 @@ define (require, exports, module) ->
     if fudge
       alert(fudge.toString())
 
-  @listener = (e) =>
-    switch e.keyCode
-      when ROT.VK_LEFT  then @manager.player.geometry.x -= 1
-      when ROT.VK_RIGHT then @manager.player.geometry.x += 1
-      when ROT.VK_DOWN  then @manager.player.geometry.y += 1
-      when ROT.VK_UP    then @manager.player.geometry.y -= 1
-      when ROT.VK_S     then alert('Sowing a seed')
-    @manager.renderRecursively()
-
   ROT.Display.Rect.cache = true
   @display = new ROT.Display(width: 80, height: 25, fontSize:24)
   @canvas = @display.getContainer()
@@ -50,6 +43,6 @@ define (require, exports, module) ->
   document.body.appendChild(@canvas)
   @canvas.setAttribute('tabindex', 0)
   @canvas.onclick = @clicker
-  @canvas.onkeydown = @listener
+  @canvas.onkeydown = (e) => @manager.keyDown(e)
   @manager.renderRecursively()
   @canvas.focus()
