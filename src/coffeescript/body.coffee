@@ -22,19 +22,19 @@ define (require, exports, module) ->
     
     recursivelyHitTest: (x, y) ->
       result = null
-      for child in @childBodies()
+      for child in @childBodies
         g = child.soul.geometryInParent()
         if g.containsPoint(x,y)
           result = child
       result or super
-          
     
-    childBodies: -> 
-      assert.ok(@manager, "manager must exist")
-      (@manager.bodyForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
+    @property 'childBodies', 
+      get: -> 
+        assert.ok(@manager, "manager must exist")
+        (@manager.bodyForSoul(ch, {createIfNecessary: true}) for ch in @soul.childSouls)
     
     renderRecursively: (d, opts = {}) ->
-      for body in @childBodies()
+      for body in @childBodies
         assert.ok(@soul, "soul must exist")
         assert.ok(@soul.geometryInParent(), "needs geometry in parent")
         g = body.soul.geometryInParent()

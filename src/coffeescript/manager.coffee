@@ -4,7 +4,7 @@ define (require, exports, module ) ->
   require("../../lib/jshashtable")
   util = require("util")
   assert = require("../../lib/chai").assert
-  
+  require('lib/underscore.js')
   
   Manager: class 
     constructor: (options) ->
@@ -22,7 +22,7 @@ define (require, exports, module ) ->
         body = new (soul.bodyClass)(soul, this)
         @soulsToBodies.put(soul, body)
         
-    bodyForSoul: (soul, opts) ->
+    bodyForSoul: (soul, opts = {}) ->
       body = @soulsToBodies.get(soul)
       if (not body) and opts["createIfNecessary"]
         body = new (soul.bodyClass)(soul, this)
@@ -33,14 +33,15 @@ define (require, exports, module ) ->
     renderRecursively: ->
       @p_generateTopLevelBodies()
       for soul in @_toplevelSouls
-        body = @bodyForSoul(soul, { createIfNeeded: true })
+        body = @bodyForSoul(soul, { createIfNecessary: true })
         body.renderRecursively(@display)
       @player.render(@display)
     
     recursivelyHitTest: (x, y) ->
       hitBody = null
-      hitSou
-      for soul in @_toplevelSouls
+      souls = _.sortBy(@_toplevelSouls, 'zOrdering')
+      souls.reverse()
+      for soul in souls
         body = this.bodyForSoul(soul)
         hitBody = body.recursivelyHitTest(x, y)
         if hitBody

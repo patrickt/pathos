@@ -1,4 +1,8 @@
+Function::property = (prop, desc) ->
+  Object.defineProperty(@prototype, prop, desc)
+
 define ['lib/underscore.js'], ->
+  
   accessor: (prop, varname, desc) ->
     varname ?= '_' + prop
     desc ?= {}
