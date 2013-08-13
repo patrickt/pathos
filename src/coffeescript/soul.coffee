@@ -63,8 +63,8 @@ define (require, exports, module) ->
     
     zOrdering: 2
     
-    getColor: ->
-      ROT.Color.fromString(@recipe['color'])
+    property "color", 
+      get: -> ROT.Color.fromString(@recipe['color'])
     
     for name in ['identifier', 'char']    
       Object.defineProperty this.prototype, name, 

@@ -45,7 +45,7 @@ define (require, exports, module) ->
     
     renderRecursively: (display, opts = {}) ->
       geom = opts.geometry ? @soul.geometry
-      display.draw(geom.x, geom.y, @soul.char, ROT.Color.toHex(@soul.getColor()))
+      display.draw(geom.x, geom.y, @soul.char, ROT.Color.toHex(@soul.color))
   
   class FarmPlotBody extends ContainerBody
     
