@@ -8,11 +8,9 @@ define (require, exports, module) ->
   assert = require('lib/chai.js').assert
   util = require('util')
   
-  Soul: class Soul
-    constructor: (@_geometry) ->
+  class Soul
+    constructor: (@geometry) ->
       # geometry may be null, as in the case of Firmaments
-    
-    util.accessor('geometry')
     
     parentSoul: null
     
@@ -23,9 +21,9 @@ define (require, exports, module) ->
     @property 'geometryInParent',
       get: -> 
         if @parentSoul
-          @_geometry.geometryByAdding(@parentSoul.geometry)
+          @geometry.geometryByAdding(@parentSoul.geometry)
         else 
-          @_geometry
+          @geometry
 
     removeSoulRecursively: ->
       
@@ -33,70 +31,60 @@ define (require, exports, module) ->
       get: -> @toString()
     
     toString: ->
-      "[%s : geometry = %s]".format(@constructor.name, @_geometry.toString())
+      "[%s : geometry = %s]".format(@constructor.name, @geometry.toString())
     
-  ContainerSoul: class ContainerSoul extends Soul
-    constructor: (@_geometry) ->
+  class ContainerSoul extends Soul
+    constructor: (@geometry) ->
       super
-      @_childSouls = []
-    
-    util.accessor 'childSouls'
+      @childSouls = []
     
     addSoul: (i) -> 
       i.parentSoul = this
-      @_childSouls.push(i)
+      @childSouls.push(i)
       
     removeSoulRecursively: (i) ->
-      if i in @_childSouls
-        @_childSouls = _.without(@_childSouls, i)
+      if i in @childSouls
+        @childSouls = _.without(@childSouls, i)
       else
-        soul.removeSoulRecursively(i) for soul in @_childSouls
+        soul.removeSoulRecursively(i) for soul in @childSouls
   
-  Plant: class Plant extends Soul
-    constructor: (@_geometry, @_recipe) ->
+  class Plant extends Soul
+    constructor: (@geometry, @recipe) ->
       super
-      assert.ok(@_recipe, "Plant created with empty recipe")
-      
-    util.accessor 'recipe'
+      assert.ok(@recipe, "Plant created with empty recipe")
     
     isFixed: false
     
     zOrdering: 2
     
-    property "color", 
+    @property "color", 
       get: -> ROT.Color.fromString(@recipe['color'])
     
     for name in ['identifier', 'char']    
-      Object.defineProperty this.prototype, name, 
-        get: -> @recipe[name]
-        set: (x) -> @recipe[name] = x
+      @property name, get: -> @recipe[name]
     
-    @property 'displayName',
-      get: -> @_recipe.display_name
+    @property 'displayName', get: -> @recipe.display_name
 
     bodyClass: Body.ItemBody
     
-  Item: class extends Soul
-    constructor: (@_geometry, @color, @_char) ->
-      super(@_geometry)
+  class Item extends Soul
+    constructor: (@geometry, @color, @char) ->
+      super(@geometry)
     
     zOrdering: 1
-  
-    util.accessor 'char'
-    getColor: -> @color
 
     bodyClass: Body.ItemBody
 
-  FarmPlot: class FarmPlot extends ContainerSoul
+  class FarmPlot extends ContainerSoul
+    
+    constructor: (@geometry, @color) ->
+      super(@geometry)
     
     zOrdering: 0
-    
-    constructor: (@_geometry, @color) ->
-      super(@_geometry)
 
     bodyClass: Body.FarmPlotBody
 
-  Firmament: class Firmament extends Soul
+  class Firmament extends Soul
     
     zOrdering: -10
     
@@ -104,3 +92,5 @@ define (require, exports, module) ->
       super(@geometry)
   
     bodyClass: Body.FirmamentBody
+    
+  return { Plant, Item, FarmPlot, Firmament}

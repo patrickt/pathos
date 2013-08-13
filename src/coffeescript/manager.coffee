@@ -13,10 +13,8 @@ define (require, exports, module ) ->
       assert.ok(@canvas, "needs canvas")
       assert.ok(@player, "needs player")
       assert.ok(@display, "needs display")
-      @_toplevelSouls = []
+      @toplevelSouls = []
       @soulsToBodies = new Hashtable
-      
-    util.accessor('toplevelSouls')
     
     p_generateTopLevelBodies: =>
       for soul in @toplevelSouls
@@ -49,20 +47,20 @@ define (require, exports, module ) ->
     
     removeSoulRecursively: (e) ->
       if e in @toplevelSouls
-        @_toplevelSouls = _.without(@toplevelSouls, e)
+        @toplevelSouls = _.without(@toplevelSouls, e)
       else
-        soul.removeSoulRecursively(e) for soul in @_toplevelSouls
+        soul.removeSoulRecursively(e) for soul in @toplevelSouls
     
     renderRecursively: ->
       @p_generateTopLevelBodies()
-      for soul in @_toplevelSouls
+      for soul in @toplevelSouls
         body = @bodyForSoul(soul, { createIfNecessary: true })
         body.renderRecursively(@display)
       @player.render(@display)
     
     recursivelyHitTest: (x, y) ->
       hitBody = null
-      souls = _.sortBy(@_toplevelSouls, 'zOrdering')
+      souls = _.sortBy(@toplevelSouls, 'zOrdering')
       souls.reverse()
       for soul in souls
         body = this.bodyForSoul(soul)
