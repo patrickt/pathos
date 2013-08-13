@@ -21,7 +21,7 @@ define (require, exports, module) ->
     @property 'geometryInParent',
       get: -> 
         if @parentSoul
-          @geometry.geometryByAdding(@parentSoul.geometry)
+          @geometry.byAdding(@parentSoul.geometry)
         else 
           @geometry
 

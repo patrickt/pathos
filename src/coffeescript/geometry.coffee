@@ -6,9 +6,14 @@
 define (require) ->
   
   assert = require('lib/chai.js').assert
+  util = require('util')
   
   class Geometry
     @fromPoint: (x, y) -> new Geometry(x, y, 1, 1)
+    
+    @property "origin", 
+      get: -> [@x, @y]
+      set: (pt) -> [@x, @y] = pt
     
     constructor: (@x = 0, @y = 0, @w = 1, @h = 1) ->
       assert.operator(@w, '>', 0)
@@ -16,10 +21,10 @@ define (require) ->
     
     toString: ->
       "[%s: x = %s, y = %s, width = %s, height = %s]".format(this.constructor.name, @x, @y, @w, @h)
-      
+    
     containsPoint: (x, y) -> (@x <= x < (@x + @w)) and (@y <= y < (@y + @h))
       
-    geometryByAdding: (g) ->
+    byAdding: (g) ->
       assert.ok(g)
       new Geometry(@x + g.x, @y + g.y, @w, @h)
       

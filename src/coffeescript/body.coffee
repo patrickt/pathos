@@ -4,7 +4,7 @@
 
 define (require, exports, module) ->
   util = require("util")
-  assert = require("../../lib/chai").assert
+  assert = require("lib/chai.js").assert
   require("lib/underscore.js")
   
   # abstract
@@ -15,7 +15,7 @@ define (require, exports, module) ->
     recursivelyHitTest: (x, y) ->
       if @soul.geometry.containsPoint(x,y) then this else null
       
-    renderRecursively: (display, opts) ->
+    renderRecursively: (display) ->
       assert.ok(false, "Body.renderRecursively is abstract")
     
     @property 'geometry', 
@@ -32,29 +32,24 @@ define (require, exports, module) ->
   class ContainerBody extends Body
     
     recursivelyHitTest: (x, y) ->
-      # test all children, converting the children's coordinates into absolute space
-      # todo: modify x and y rather than recomputing parent geometry every time
-      _.find(@childBodies, (child) -> child.geometryInParent.containsPoint(x, y)) or super
+      [cx, cy] = @convertAbsolutePointToRelative([x, y])
+      _.find(@childBodies, (child) -> child.geometry.containsPoint(cx, cy)) or super
     
     @property 'childBodies', 
       get: -> (@manager.bodyForSoul(ch, createIfNecessary: true) for ch in @soul.childSouls)
       
-    convertAbsolutePointToRelative: (point) ->
-      [point.x - @geometry.x, point.y - @geometry.y]
+    convertAbsolutePointToRelative: ([x, y]) -> [x - @geometry.x, y - @geometry.y]
     
-    renderRecursively: (d, opts = {}) ->
-      for body in @childBodies
-        body.renderRecursively(d, _.extend(opts, geometry: body.soul.geometryInParent))
+    renderRecursively: (d) -> body.renderRecursively(d) for body in @childBodies
   
   class ItemBody extends Body
     
-    renderRecursively: (display, opts = {}) ->
-      geom = opts.geometry ? @soul.geometry
-      display.draw(geom.x, geom.y, @soul.char, ROT.Color.toHex(@soul.color))
+    renderRecursively: (display) ->
+      display.draw(@geometryInParent.x, @geometryInParent.y, @soul.char, ROT.Color.toHex(@soul.color))
   
   class FarmPlotBody extends ContainerBody
     
-    renderRecursively: (display, opts) ->
+    renderRecursively: (display) ->
       @soul.geometry.eachSquare (x, y) =>
         display.draw(x, y, '=', ROT.Color.toHex(@soul.color))
       super
