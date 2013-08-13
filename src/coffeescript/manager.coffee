@@ -2,12 +2,15 @@
 
 define (require, exports, module ) ->
   
-  require("../../lib/jshashtable")
+  require("lib/jshashtable.js")
   util = require("util")
   assert = require("../../lib/chai").assert
   require('lib/underscore.js')
+  Soul = require ("soul")
+  { Geometry } = require("geometry")
+  plants = require("data/plants.js")
   
-  Manager: class 
+  class Manager
     constructor: (options) ->
       {@canvas, @player, @display} = options
       assert.ok(@canvas, "needs canvas")
@@ -34,7 +37,7 @@ define (require, exports, module ) ->
         when ROT.VK_RIGHT then @player.geometry.x += 1
         when ROT.VK_DOWN  then @player.geometry.y += 1
         when ROT.VK_UP    then @player.geometry.y -= 1
-        when ROT.VK_S     then alert('Sowing a seed')
+        when ROT.VK_S     then @sow()
         when ROT.VK_E     then @pluck()
       @renderRecursively()
       
@@ -44,6 +47,21 @@ define (require, exports, module ) ->
       unless plant.isFixed
         alert('YOU HAVE GAINED A %s!'.format(plant.displayName))
         @removeSoulRecursively(plant)
+        
+    sow: ->
+      [x, y] = [@player.geometry.x, @player.geometry.y]
+      rep = @recursivelyHitTest(x, y)
+      if rep.soul instanceof Soul.FarmPlot
+        xc = x - rep.geometry.x
+        yc = y - rep.geometry.y
+        plant = new Soul.Plant(new Geometry(xc, yc, 1, 1), plants.marsh_beans)
+        rep.soul.addSoul(plant)
+        @renderRecursively()
+      else if rep.soul instanceof Soul.Firmament
+        plant = new Soul.Plant(new Geometry(x, y, 1, 1), plants.tridentvine)
+        @toplevelSouls.push(plant)
+        @renderRecursively()
+      
     
     removeSoulRecursively: (e) ->
       if e in @toplevelSouls
@@ -68,3 +86,5 @@ define (require, exports, module ) ->
         if hitBody
           break
       hitBody
+  
+  return { Manager }

@@ -92,5 +92,5 @@ define (require, exports, module) ->
       super(@geometry)
   
     bodyClass: Body.FirmamentBody
-    
-  return { Plant, Item, FarmPlot, Firmament}
+  
+  return { ContainerSoul, Plant, Item, FarmPlot, Firmament}

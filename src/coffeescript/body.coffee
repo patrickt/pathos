@@ -24,6 +24,8 @@ define (require, exports, module) ->
     @property 'geometryInParent',
       get: -> @soul.geometryInParent
       
+    convertAbsolutePointToRelative: (point) -> point
+      
     toString: ->
       "[%s : %s]".format(@constructor.name, @soul.toString())
   
@@ -36,6 +38,9 @@ define (require, exports, module) ->
     
     @property 'childBodies', 
       get: -> (@manager.bodyForSoul(ch, createIfNecessary: true) for ch in @soul.childSouls)
+      
+    convertAbsolutePointToRelative: (point) ->
+      [point.x - @geometry.x, point.y - @geometry.y]
     
     renderRecursively: (d, opts = {}) ->
       for body in @childBodies
