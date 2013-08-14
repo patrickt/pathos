@@ -8,8 +8,8 @@ requirejs.config
   
 # Javascript, you fucking garbage fucker 
 
-define(["soul", "player", "manager", "geometry", "data/plants.js", "lib/rot.js", "lib/underscore.js"], 
-  (Soul, Player, Manager, { Geometry }, Plants) =>
+define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", "lib/rot.js", "lib/underscore.js"], 
+  (Soul, Player, Manager, { Geometry }, Narrative, Plants) =>
   
     @clicker = (e) =>
       [x, y] = @display.eventToPosition(e)
