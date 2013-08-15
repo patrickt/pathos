@@ -3,34 +3,31 @@ define (require, exports, module) ->
   require('lib/underscore.js')
   {data, any, only} = adt
   
-  RoleMap = { name: only(String) }
-  Role = data
-    Hero: 
-      RoleMap
-    Donor: 
-      RoleMap
-    Helper: 
-      RoleMap
-    Sought: 
-      RoleMap
-    Dispatcher: 
-      RoleMap
-    Rival:
-      RoleMap
-    Villain: 
-      RoleMap
-    FalseHero: 
-      RoleMap
-    
-  Role::toString = -> "hi"
+  Role = adt.enum(  "Hero"
+                  , "Donor"
+                  , "Helper"
+                  , "Sought"
+                  , "Dispatcher"
+                  , "Rival"
+                  , "Villain"
+                  , "FalseHero"
+                  )
+  
+  
+  {Figure} = data
+    Figure:
+      name: only(String)
+      role: only(Role)
+  
+  Figure::toString = -> @name
   
   characters = 
-    [ Role.Hero("Kitsurugu")
-    , Role.Dispatcher("Irisveil")
-    , Role.Helper("Saber")
-    , Role.Villain("Kirei")
-    , Role.Rival("Waver")
-    , Role.Helper("Iskandar")
+    [ Figure("Kitsurugi", Role.Hero)
+    , Figure("Irisveil", Role.Dispatcher)
+    , Figure("Saber", Role.Helper)
+    , Figure("Kirei", Role.Villain)
+    , Figure("Waver", Role.Rival)
+    , Figure("Iskandar", Role.Helper)
     ]
   
   choice = (arr) -> arr[_.random(arr.length - 1)]
@@ -47,8 +44,8 @@ define (require, exports, module) ->
   PlotPoint = data
     PlotPoint:
       action: any
-      from: only(Role)
-      to: only(Role)
+      from: only(Figure)
+      to: only(Figure)
   
   pointChoice = (action) ->
     from = choice(characters)
