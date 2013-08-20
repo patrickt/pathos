@@ -46,10 +46,13 @@ define (require, exports, module ) ->
       @renderRecursively()
       
     invalidateInventory: ->
+      $("#inventory").empty()
       for key in _.keys(plants)
-        el = document.createTextNode(plants[key].displayName)
-        console.log(el)
-        $("#inventory").append(el)
+        ident = plants[key].identifier
+        $("#inventory").append($("<input type='radio' name='selected' id='#{ident}'>"))
+        $("#inventory").append($("<label for='#{ident}'>#{plants[key].displayName}</label>"))
+        $("#inventory").append($("<br>"))
+      $("#inventory").children(':first-child').prop('defaultChecked', true)
       
     pluck: ->
       pos = @player.geometry
@@ -61,14 +64,16 @@ define (require, exports, module ) ->
     sow: ->
       [x, y] = [@player.geometry.x, @player.geometry.y]
       rep = @recursivelyHitTest(x, y)
+      toPlant = $('input[name="selected"]:checked').attr("id")
+      
       if rep.soul instanceof Soul.FarmPlot
         xc = x - rep.geometry.x
         yc = y - rep.geometry.y
-        plant = new Soul.Plant(new Geometry(xc, yc, 1, 1), plants.marsh_beans)
+        plant = new Soul.Plant(new Geometry(xc, yc, 1, 1), plants[toPlant])
         rep.soul.addSoul(plant)
         @renderRecursively()
       else if rep.soul instanceof Soul.Firmament
-        plant = new Soul.Plant(new Geometry(x, y, 1, 1), plants.tridentvine)
+        plant = new Soul.Plant(new Geometry(x, y, 1, 1), plants[toPlant])
         @toplevelSouls.push(plant)
         @renderRecursively()
       

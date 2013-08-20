@@ -27,9 +27,6 @@ define (require, exports, module) ->
           @geometry
 
     removeSoulRecursively: ->
-      
-    @property 'displayName',
-      get: -> @toString()
     
     toString: ->
       "[%s : geometry = %s]".format(@constructor.name, @geometry.toString())
