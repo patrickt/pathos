@@ -1,7 +1,7 @@
 define({
   "marsh_beans": {
     "identifier": "marsh_beans",
-    "display_name": "Marsh beans",
+    "displayName": "Marsh beans",
     "char": 'Ω',
     "color": "olive",
     "water_threshold": {
@@ -16,7 +16,7 @@ define({
   },
   "tridentvine": {
     "identifier": "tridentvine",
-    "display_name": "Trident vine",
+    "displayName": "Trident vine",
     "char": "☄",
     "color": "deepskyblue",
     "attributes": ["sharp", "hardy", "noxious"]

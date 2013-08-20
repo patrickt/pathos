@@ -4,6 +4,7 @@
 
 define (require, exports, module) ->
   
+  require('lib/zepto.js')
   Body = require('body')
   assert = require('lib/chai.js').assert
   util = require('util')
@@ -52,6 +53,7 @@ define (require, exports, module) ->
     constructor: (@geometry, @recipe) ->
       super
       assert.ok(@recipe, "Plant created with empty recipe")
+      $.extend(this, @recipe)
     
     isFixed: false
     
@@ -59,11 +61,6 @@ define (require, exports, module) ->
     
     @property "color", 
       get: -> ROT.Color.fromString(@recipe['color'])
-    
-    for name in ['identifier', 'char']    
-      @property name, get: -> @recipe[name]
-    
-    @property 'displayName', get: -> @recipe.display_name
 
     bodyClass: Body.ItemBody
     

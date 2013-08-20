@@ -3,12 +3,16 @@
 define (require, exports, module ) ->
   
   require("lib/jshashtable.js")
-  util = require("util")
-  assert = require("../../lib/chai").assert
   require('lib/underscore.js')
-  Soul = require ("soul")
+  require('lib/zepto.js')
+  
+  assert       = require('lib/chai.js').assert
+  util         = require("util")
+  Soul         = require ("soul")
   { Geometry } = require("geometry")
+  
   plants = require("data/plants.js")
+  
   
   class Manager
     constructor: (options) ->
@@ -40,6 +44,12 @@ define (require, exports, module ) ->
         when ROT.VK_S     then @sow()
         when ROT.VK_E     then @pluck()
       @renderRecursively()
+      
+    invalidateInventory: ->
+      for key in _.keys(plants)
+        el = document.createTextNode(plants[key].displayName)
+        console.log(el)
+        $("#inventory").append(el)
       
     pluck: ->
       pos = @player.geometry

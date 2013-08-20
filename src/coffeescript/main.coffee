@@ -8,7 +8,7 @@ requirejs.config
   
 # Javascript, you fucking garbage fucker 
 
-define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", "lib/rot.js", "lib/underscore.js"], 
+define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", "lib/rot.js", "lib/underscore.js", "lib/zepto.js"], 
   (Soul, Player, Manager, { Geometry }, Narrative, Plants) =>
   
     @clicker = (e) =>
@@ -30,12 +30,15 @@ define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", 
       canvas:  @canvas
       player:  new Player.Player(new Geometry(10, 10))
       display: @display
-
+    
+    
     @manager.toplevelSouls.push(@firmament)
     @manager.toplevelSouls.push(@farm)
     @manager.toplevelSouls.push(new Soul.Plant(new Geometry(20, 20), Plants.tridentvine))
-
-    document.body.appendChild(@canvas)
+    
+    $("#canvas-placeholder").replaceWith(@canvas)
+    @manager.invalidateInventory()
+    
     @canvas.setAttribute('tabindex', 0)
     @canvas.onclick = @clicker
     @canvas.onkeydown = (e) => @manager.keyDown(e)
