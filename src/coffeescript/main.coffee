@@ -12,16 +12,17 @@ define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", 
   (Soul, Player, Manager, { Geometry }, Narrative, Plants) =>
   
     @clicker = (e) =>
-      [x, y] = @display.eventToPosition(e)
-      alert('x = ' + x + ', y =' + y)
-      fudge = @manager.recursivelyHitTest(x,y)
-      if fudge
-        alert(fudge.toString())
+      # [x, y] = @display.eventToPosition(e)
+      # alert('x = ' + x + ', y =' + y)
+      # fudge = @manager.recursivelyHitTest(x,y)
+      # if fudge
+      #   alert(fudge.toString())
 
     ROT.Display.Rect.cache = true
     @display = new ROT.Display(width: 80, height: 25, fontSize:24)
     @canvas = @display.getContainer()
-
+    @canvas.id = "main-canvas"
+    
     @firmament = new Soul.Firmament(new Geometry(0, 0, 80, 25), ROT.Color.fromString("goldenrod"))
     @farm = new Soul.FarmPlot(new Geometry(50, 10, 4, 4), ROT.Color.fromString("green"))
     @farm.addSoul(new Soul.Plant(new Geometry(2,0), Plants.marsh_beans))
