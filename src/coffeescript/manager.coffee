@@ -17,33 +17,34 @@ define (require, exports, module ) ->
   class Manager
     constructor: (options) ->
       {@canvas, @player, @display} = options
-      assert.ok(@canvas, "needs canvas")
-      assert.ok(@player, "needs player")
-      assert.ok(@display, "needs display")
-      @toplevelSouls = []
+      @toplevelSouls = [ @player ]
       @soulsToBodies = new Hashtable
     
     p_generateTopLevelBodies: =>
       for soul in @toplevelSouls
-        body = new (soul.bodyClass)(soul, this)
-        @soulsToBodies.put(soul, body)
+        unless @soulsToBodies.containsKey(soul)
+          body = new (soul.bodyClass)(soul, this)
+          @soulsToBodies.put(soul, body)
+        
+    invalidateBodies: ->
+      @soulsToBodies = new Hashtable
+      @renderRecursively()
         
     bodyForSoul: (soul, opts = {}) ->
       body = @soulsToBodies.get(soul)
-      if (not body) and opts.createIfNecessary
+      if opts.createIfNecessary and not body
         body = new (soul.bodyClass)(soul, this)
         @soulsToBodies.put(soul, body)
       return body
     
     keyDown: (e) ->
       switch e.keyCode
-        when ROT.VK_LEFT  then @player.geometry.x -= 1
-        when ROT.VK_RIGHT then @player.geometry.x += 1
-        when ROT.VK_DOWN  then @player.geometry.y += 1
-        when ROT.VK_UP    then @player.geometry.y -= 1
-        when ROT.VK_S     then @sow()
-        when ROT.VK_E     then @pluck()
-      @renderRecursively()
+        when ROT.VK_S 
+          @sow()
+        when ROT.VK_E 
+          @pluck()
+        else
+          _(@soulsToBodies.values()).map( (v) -> v.handleEvent(e))
       
     invalidateInventory: ->
       $("#inventory").empty()
@@ -56,8 +57,8 @@ define (require, exports, module ) ->
       
     pluck: ->
       pos = @player.geometry
-      plant = @recursivelyHitTest(pos.x, pos.y).soul
-      unless plant.isFixed
+      item = @recursivelyHitTest(pos.x, pos.y).soul
+      unless item and item.isFixed
         alert('YOU HAVE GAINED A %s!'.format(plant.displayName))
         @removeSoulRecursively(plant)
         
@@ -69,12 +70,8 @@ define (require, exports, module ) ->
       if rep.soul instanceof Soul.FarmPlot
         xc = x - rep.geometry.x
         yc = y - rep.geometry.y
-        plant = new Soul.Plant(new Geometry(xc, yc, 1, 1), plants[toPlant])
+        plant = new Soul.Plant(new Geometry(xc, yc, 1, 1, 1), plants[toPlant])
         rep.soul.addSoul(plant)
-        @renderRecursively()
-      else if rep.soul instanceof Soul.Firmament
-        plant = new Soul.Plant(new Geometry(x, y, 1, 1), plants[toPlant])
-        @toplevelSouls.push(plant)
         @renderRecursively()
       
     
@@ -84,22 +81,16 @@ define (require, exports, module ) ->
       else
         soul.removeSoulRecursively(e) for soul in @toplevelSouls
     
-    renderRecursively: ->
+    renderRecursively: (display) ->
       @p_generateTopLevelBodies()
-      for soul in @toplevelSouls
-        body = @bodyForSoul(soul, { createIfNecessary: true })
-        body.renderRecursively(@display)
-      @player.render(@display)
-    
+      @bodyForSoul(soul, createIfNecessary: true).renderRecursively(@display) for soul in _(@toplevelSouls).sortBy( (s) -> s.geometry.z)
+          
     recursivelyHitTest: (x, y) ->
-      hitBody = null
-      souls = _.sortBy(@toplevelSouls, 'zOrdering')
-      souls.reverse()
+      souls = _(@toplevelSouls).sortBy('geometry.z').reverse()
       for soul in souls
         body = this.bodyForSoul(soul)
         hitBody = body.recursivelyHitTest(x, y)
-        if hitBody
-          break
-      hitBody
+        if hitBody then return hitBody
+      null
   
   return { Manager }

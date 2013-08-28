@@ -15,8 +15,6 @@ define (require, exports, module) ->
     
     parentSoul: null
     
-    zOrdering: 0
-    
     isFixed: true
     
     @property 'geometryInParent',
@@ -54,8 +52,6 @@ define (require, exports, module) ->
     
     isFixed: false
     
-    zOrdering: 2
-    
     @property "color", 
       get: -> ROT.Color.fromString(@recipe['color'])
 
@@ -64,8 +60,6 @@ define (require, exports, module) ->
   class Item extends Soul
     constructor: (@geometry, @color, @char) ->
       super(@geometry)
-    
-    zOrdering: 1
 
     bodyClass: Body.ItemBody
 
@@ -73,18 +67,14 @@ define (require, exports, module) ->
     
     constructor: (@geometry, @color) ->
       super(@geometry)
-    
-    zOrdering: 0
 
     bodyClass: Body.FarmPlotBody
 
   class Firmament extends Soul
-    
-    zOrdering: -10
     
     constructor: (@geometry, @color) ->
       super(@geometry)
   
     bodyClass: Body.FirmamentBody
   
-  return { ContainerSoul, Plant, Item, FarmPlot, Firmament}
+  return { Soul, ContainerSoul, Plant, Item, FarmPlot, Firmament}

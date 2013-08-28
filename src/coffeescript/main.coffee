@@ -23,19 +23,19 @@ define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", 
     @canvas = @display.getContainer()
     @canvas.id = "main-canvas"
     
-    @firmament = new Soul.Firmament(new Geometry(0, 0, 80, 25), ROT.Color.fromString("goldenrod"))
-    @farm = new Soul.FarmPlot(new Geometry(50, 10, 4, 4), ROT.Color.fromString("green"))
-    @farm.addSoul(new Soul.Plant(new Geometry(2,0), Plants.marsh_beans))
+    @firmament = new Soul.Firmament(new Geometry(0, 0, 80, 35, -10), ROT.Color.fromString("goldenrod"))
+    @farm = new Soul.FarmPlot(new Geometry(50, 10, 4, 4, 1), ROT.Color.fromString("green"))
+    @farm.addSoul(new Soul.Plant(new Geometry(2,0, 1, 1, 2), Plants.marsh_beans))
 
     @manager = new Manager.Manager
       canvas:  @canvas
-      player:  new Player.Player(new Geometry(10, 10))
+      player:  new Player.Player(new Geometry(10, 10, 1, 1, 5))
       display: @display
     
     
     @manager.toplevelSouls.push(@firmament)
     @manager.toplevelSouls.push(@farm)
-    @manager.toplevelSouls.push(new Soul.Plant(new Geometry(20, 20), Plants.tridentvine))
+    @manager.toplevelSouls.push(new Soul.Plant(new Geometry(20, 20, 1, 1, 2), Plants.tridentvine))
     
     $("#canvas-placeholder").replaceWith(@canvas)
     @manager.invalidateInventory()

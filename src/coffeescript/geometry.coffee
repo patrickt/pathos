@@ -9,15 +9,16 @@ define (require) ->
   util = require('util')
   
   class Geometry
-    @fromPoint: (x, y) -> new Geometry(x, y, 1, 1)
+    @fromPoint: (x, y) -> new Geometry(x, y)
     
     @property "origin", 
       get: -> [@x, @y]
       set: (pt) -> [@x, @y] = pt
     
-    constructor: (@x = 0, @y = 0, @w = 1, @h = 1) ->
+    constructor: (@x = 0, @y = 0, @w = 1, @h = 1, @z = 0) ->
       assert.operator(@w, '>', 0)
-      assert.operator(@w, '>', 0)
+      assert.operator(@h, '>', 0)
+      
     
     toString: ->
       "[%s: x = %s, y = %s, width = %s, height = %s]".format(this.constructor.name, @x, @y, @w, @h)
@@ -26,11 +27,11 @@ define (require) ->
       
     byAdding: (g) ->
       assert.ok(g)
-      new Geometry(@x + g.x, @y + g.y, @w, @h)
+      new Geometry(@x + g.x, @y + g.y, @w, @h, @z)
       
     bySubtracting: (g) ->
       assert.ok(g)
-      new Geometry(@x - g.x, @y - g.y, @w, @h)
+      new Geometry(@x - g.x, @y - g.y, @w, @h, @z)
     
     eachSquare: (fn) ->
       for xx in [@x..(@x + @w)]

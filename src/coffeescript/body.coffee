@@ -25,6 +25,8 @@ define (require, exports, module) ->
       get: -> @soul.geometryInParent
       
     convertAbsolutePointToRelative: (point) -> point
+    
+    handleEvent: (e) -> false
       
     toString: ->
       "[%s : %s]".format(@constructor.name, @soul.toString())
@@ -60,4 +62,4 @@ define (require, exports, module) ->
       @soul.geometry.eachSquare (x, y) =>
         display.draw(x, y, '.', ROT.Color.toHex(@soul.color))
     
-  return { ItemBody, FarmPlotBody, FirmamentBody }
+  return { Body, ItemBody, FarmPlotBody, FirmamentBody }
