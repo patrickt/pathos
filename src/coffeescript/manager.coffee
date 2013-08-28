@@ -18,7 +18,12 @@ define (require, exports, module ) ->
     constructor: (options) ->
       {@canvas, @player, @display} = options
       @toplevelSouls = [ @player ]
-      @soulsToBodies = new Hashtable
+      @soulsToBodies = new Hashtable()
+    
+    initialize: -> 
+      @toplevelSouls = [ @player ]
+      @soulsToBodies = new Hashtable()
+    
     
     p_generateTopLevelBodies: =>
       for soul in @toplevelSouls
@@ -27,7 +32,7 @@ define (require, exports, module ) ->
           @soulsToBodies.put(soul, body)
         
     invalidateBodies: ->
-      @soulsToBodies = new Hashtable
+      @soulsToBodies = new Hashtable()
       @renderRecursively()
         
     bodyForSoul: (soul, opts = {}) ->
@@ -39,7 +44,7 @@ define (require, exports, module ) ->
     
     keyDown: (e) ->
       switch e.keyCode
-        when ROT.VK_S 
+        when ROT.VK_
           @sow()
         when ROT.VK_E 
           @pluck()
@@ -47,25 +52,25 @@ define (require, exports, module ) ->
           _(@soulsToBodies.values()).map( (v) -> v.handleEvent(e))
       
     invalidateInventory: ->
-      $("#inventory").empty()
-      for key in _.keys(plants)
-        ident = plants[key].identifier
-        $("#inventory").append($("<input type='radio' name='selected' id='#{ident}'>"))
-        $("#inventory").append($("<label for='#{ident}'>#{plants[key].displayName}</label>"))
-        $("#inventory").append($("<br>"))
-      $("#inventory").children(':first-child').prop('defaultChecked', true)
+      # $("#inventory").empty()
+      # for key in _.keys(plants)
+      #   ident = plants[key].identifier
+      #   $("#inventory").append($("<input type='radio' name='selected' id='#{ident}'>"))
+      #   $("#inventory").append($("<label for='#{ident}'>#{plants[key].displayName}</label>"))
+      #   $("#inventory").append($("<br>"))
+      # $("#inventory").children(':first-child').prop('defaultChecked', true)
       
     pluck: ->
       pos = @player.geometry
       item = @recursivelyHitTest(pos.x, pos.y).soul
-      unless item and item.isFixed
+      if item and not item.isFixed
         alert('YOU HAVE GAINED A %s!'.format(plant.displayName))
         @removeSoulRecursively(plant)
         
     sow: ->
       [x, y] = [@player.geometry.x, @player.geometry.y]
       rep = @recursivelyHitTest(x, y)
-      toPlant = $('input[name="selected"]:checked').attr("id")
+      toPlant = plants["marsh_beans"]
       
       if rep.soul instanceof Soul.FarmPlot
         xc = x - rep.geometry.x

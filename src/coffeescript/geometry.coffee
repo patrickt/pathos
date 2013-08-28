@@ -5,6 +5,7 @@
 
 define (require) ->
   
+  require('lib/underscore.js')
   assert = require('lib/chai.js').assert
   util = require('util')
   
