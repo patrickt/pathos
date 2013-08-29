@@ -23,19 +23,44 @@ define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", 
     @canvas = @display.getContainer()
     @canvas.id = "main-canvas"
     
-    @firmament = new Soul.Firmament(new Geometry(0, 0, 80, 35, -10), ROT.Color.fromString("goldenrod"))
-    @farm = new Soul.FarmPlot(new Geometry(50, 10, 4, 4, 1), ROT.Color.fromString("green"))
-    @farm.addSoul(new Soul.Plant(new Geometry(2,0, 1, 1, 2), Plants.marsh_beans))
+    geom = new Geometry(0, 0, 80, 35, -10)
+    @firmament = new Soul.Firmament({
+      geometry: new Geometry()
+      color:    ROT.Color.fromString("goldenrod")
+    })
+    
+    @firmament.on('change:geometry', -> console.log("WOOOOO"))
+    @firmament.set('geometry', geom)
+    
+    @farm = new Soul.FarmPlot {
+      geometry: new Geometry(50, 10, 4, 4, 1)
+      color: ROT.Color.fromString("green")
+    }
+    
+    @testplant = new Soul.Plant {
+      geometry: new Geometry(2,0, 1, 1, 2)
+      recipe: Plants.marsh_beans
+    }
+    
+    @farm.addSoul(@testplant)
+    
+    @player = new Player.Player {
+      geometry: new Geometry(10, 10, 1, 1, 5)
+    }
 
     @manager = new Manager.Manager
       canvas:  @canvas
-      player:  new Player.Player(new Geometry(10, 10, 1, 1, 5))
+      player:  @player
       display: @display
     
+    @otherplant = new Soul.Plant {
+      geometry: new Geometry(20, 20, 1, 1, 2),
+      recipe: Plants.tridentvine
+    }
     
     @manager.toplevelSouls.push(@firmament)
     @manager.toplevelSouls.push(@farm)
-    @manager.toplevelSouls.push(new Soul.Plant(new Geometry(20, 20, 1, 1, 2), Plants.tridentvine))
+    @manager.toplevelSouls.push(@otherplant)
     
     $("#canvas-placeholder").replaceWith(@canvas)
     @manager.invalidateInventory()

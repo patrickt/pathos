@@ -5,17 +5,20 @@
 define (require, exports, module) ->
   
   require('lib/zepto.js')
+  require('lib/backbone.js')
   Body = require('body')
   assert = require('lib/chai.js').assert
   util = require('util')
   
-  class Soul
-    constructor: (@geometry) ->
-      # geometry may be null, as in the case of Firmaments
+  class Soul extends Backbone.Model
     
-    parentSoul: null
+    @property 'geometry',
+      get: -> @get('geometry')
+      set: (g) -> @set('geometry', g)
     
-    isFixed: true
+    defaults:
+      parentSoul: null
+      isFixed: true
     
     @property 'geometryInParent',
       get: -> 
@@ -30,8 +33,7 @@ define (require, exports, module) ->
       "[%s : geometry = %s]".format(@constructor.name, @geometry.toString())
     
   class ContainerSoul extends Soul
-    constructor: (@geometry) ->
-      super
+    initialize:  ->
       @childSouls = []
     
     addSoul: (i) -> 
@@ -45,15 +47,13 @@ define (require, exports, module) ->
         soul.removeSoulRecursively(i) for soul in @childSouls
   
   class Plant extends Soul
-    constructor: (@geometry, @recipe) ->
-      super
-      assert.ok(@recipe, "Plant created with empty recipe")
-      $.extend(this, @recipe)
+    initialize: ->
+      $.extend(this, @get('recipe'))
     
     isFixed: false
     
     @property "color", 
-      get: -> ROT.Color.fromString(@recipe['color'])
+      get: -> ROT.Color.fromString(@get('recipe')['color'])
 
     bodyClass: Body.ItemBody
     
@@ -64,17 +64,17 @@ define (require, exports, module) ->
     bodyClass: Body.ItemBody
 
   class FarmPlot extends ContainerSoul
-    
-    constructor: (@geometry, @color) ->
-      super(@geometry)
 
     bodyClass: Body.FarmPlotBody
+    
+    @property "color", 
+      get: -> @get('color')
 
   class Firmament extends Soul
-    
-    constructor: (@geometry, @color) ->
-      super(@geometry)
   
     bodyClass: Body.FirmamentBody
+    
+    @property "color", 
+      get: -> @get('color')
   
   return { Soul, ContainerSoul, Plant, Item, FarmPlot, Firmament}

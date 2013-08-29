@@ -12,13 +12,13 @@ define({
       "minimum": -0.5,
       "maximum": 5.0
     },
-    "attributes": ["finicky", "moist"]
+    "traits": ["finicky", "moist"]
   },
   "tridentvine": {
     "identifier": "tridentvine",
     "displayName": "Trident vine",
     "char": "☄",
     "color": "deepskyblue",
-    "attributes": ["sharp", "hardy", "noxious"]
+    "traits": ["sharp", "hardy", "noxious"]
   }
 });
