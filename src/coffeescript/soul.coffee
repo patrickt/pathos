@@ -12,9 +12,7 @@ define (require, exports, module) ->
   
   class Soul extends Backbone.Model
     
-    @property 'geometry',
-      get: -> @get('geometry')
-      set: (g) -> @set('geometry', g)
+    @observable 'geometry'
     
     parentSoul: null
     isFixed: true

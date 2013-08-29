@@ -23,14 +23,10 @@ define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", 
     @canvas = @display.getContainer()
     @canvas.id = "main-canvas"
     
-    geom = new Geometry(0, 0, 80, 35, -10)
     @firmament = new Soul.Firmament({
-      geometry: new Geometry()
+      geometry: new Geometry(0, 0, 80, 35, -10)
       color:    ROT.Color.fromString("goldenrod")
     })
-    
-    @firmament.on('change:geometry', -> console.log("WOOOOO"))
-    @firmament.set('geometry', geom)
     
     @farm = new Soul.FarmPlot {
       geometry: new Geometry(50, 10, 4, 4, 1)
@@ -48,10 +44,11 @@ define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", 
       geometry: new Geometry(10, 10, 1, 1, 5)
     }
 
-    @manager = new Manager.Manager
+    @manager = new Manager.Manager {
       canvas:  @canvas
       player:  @player
       display: @display
+    }
     
     @otherplant = new Soul.Plant {
       geometry: new Geometry(20, 20, 1, 1, 2),
