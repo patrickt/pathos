@@ -16,10 +16,9 @@ define (require, exports, module) ->
       get: -> @get('geometry')
       set: (g) -> @set('geometry', g)
     
-    defaults:
-      parentSoul: null
-      isFixed: true
-    
+    parentSoul: null
+    isFixed: true
+  
     @property 'geometryInParent',
       get: -> 
         if @parentSoul

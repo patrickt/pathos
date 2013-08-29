@@ -44,7 +44,7 @@ define (require, exports, module ) ->
     
     keyDown: (e) ->
       switch e.keyCode
-        when ROT.VK_
+        when ROT.VK_Q
           @sow()
         when ROT.VK_E 
           @pluck()
@@ -52,20 +52,20 @@ define (require, exports, module ) ->
           _(@soulsToBodies.values()).map( (v) -> v.handleEvent(e))
       
     invalidateInventory: ->
-      # $("#inventory").empty()
-      # for key in _.keys(plants)
-      #   ident = plants[key].identifier
-      #   $("#inventory").append($("<input type='radio' name='selected' id='#{ident}'>"))
-      #   $("#inventory").append($("<label for='#{ident}'>#{plants[key].displayName}</label>"))
-      #   $("#inventory").append($("<br>"))
-      # $("#inventory").children(':first-child').prop('defaultChecked', true)
+      $("#inventory").empty()
+      for key in _.keys(plants)
+        ident = plants[key].identifier
+        $("#inventory").append($("<input type='radio' name='selected' id='#{ident}'>"))
+        $("#inventory").append($("<label for='#{ident}'>#{plants[key].displayName}</label>"))
+        $("#inventory").append($("<br>"))
+      $("#inventory").children(':first-child').prop('defaultChecked', true)
       
     pluck: ->
       pos = @player.geometry
       item = @recursivelyHitTest(pos.x, pos.y).soul
       if item and not item.isFixed
-        alert('YOU HAVE GAINED A %s!'.format(plant.displayName))
-        @removeSoulRecursively(plant)
+        alert('YOU HAVE GAINED A %s!'.format(item.displayName))
+        @removeSoulRecursively(item)
         
     sow: ->
       [x, y] = [@player.geometry.x, @player.geometry.y]
@@ -75,7 +75,10 @@ define (require, exports, module ) ->
       if rep.soul instanceof Soul.FarmPlot
         xc = x - rep.geometry.x
         yc = y - rep.geometry.y
-        plant = new Soul.Plant(new Geometry(xc, yc, 1, 1, 1), plants[toPlant])
+        plant = new Soul.Plant
+          geometry: new Geometry(xc, yc, 1, 1, 1)
+          recipe: toPlant
+        
         rep.soul.addSoul(plant)
         @renderRecursively()
       
