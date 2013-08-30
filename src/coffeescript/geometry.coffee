@@ -12,6 +12,8 @@ define (require) ->
   class Geometry
     @fromPoint: (x, y) -> new Geometry(x, y)
     
+    @indeterminate: {}
+    
     @property "origin", 
       get: -> [@x, @y]
       set: (pt) -> [@x, @y] = pt

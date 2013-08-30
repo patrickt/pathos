@@ -5,6 +5,6 @@ define ['lib/underscore.js'], ->
     Object.defineProperty(@prototype, prop, desc)
   
   Function::observable = (prop) ->
-    Object.defineProperty(@prototype, prop,
+     @property prop,
       get: -> @get(prop)
-      set: (arg) -> @set(prop, arg))
+      set: (arg) -> @set(prop, arg)

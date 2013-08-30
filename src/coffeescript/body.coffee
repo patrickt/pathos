@@ -10,7 +10,7 @@ define (require, exports, module) ->
   # abstract
   class Body
     constructor: (@soul, @manager) ->
-      assert.ok(@manager, "Body created without manager")
+      assert.ok(arguments...)
     
     recursivelyHitTest: (x, y) ->
       if @soul.geometry.containsPoint(x,y) then this else null
@@ -47,7 +47,7 @@ define (require, exports, module) ->
   class ItemBody extends Body
     
     renderRecursively: (display) ->
-      display.draw(@geometryInParent.x, @geometryInParent.y, @soul.char, ROT.Color.toHex(@soul.color))
+      display.draw(@geometryInParent.x, @geometryInParent.y, @soul.get('recipe').char, ROT.Color.toHex(ROT.Color.fromString(@soul.get('recipe').color)))
   
   class FarmPlotBody extends ContainerBody
     

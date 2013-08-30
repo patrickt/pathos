@@ -6,9 +6,10 @@ define (require, exports, module) ->
   
   require('lib/zepto.js')
   require('lib/backbone.js')
-  Body = require('body')
+  
+  Body   = require('body')
   assert = require('lib/chai.js').assert
-  util = require('util')
+  util   = require('util')
   
   class Soul extends Backbone.Model
     
@@ -44,19 +45,11 @@ define (require, exports, module) ->
         soul.removeSoulRecursively(i) for soul in @childSouls
   
   class Plant extends Soul
-    initialize: ->
-      $.extend(this, @get('recipe'))
+    
+    @observable 'geometry'
+    @observable 'recipe'
     
     isFixed: false
-    
-    @property "color", 
-      get: -> ROT.Color.fromString(@get('recipe')['color'])
-
-    bodyClass: Body.ItemBody
-    
-  class Item extends Soul
-    constructor: (@geometry, @color, @char) ->
-      super(@geometry)
 
     bodyClass: Body.ItemBody
 
@@ -64,14 +57,12 @@ define (require, exports, module) ->
 
     bodyClass: Body.FarmPlotBody
     
-    @property "color", 
-      get: -> @get('color')
+    @observable 'color'
 
   class Firmament extends Soul
   
     bodyClass: Body.FirmamentBody
     
-    @property "color", 
-      get: -> @get('color')
+    @observable 'color'
   
-  return { Soul, ContainerSoul, Plant, Item, FarmPlot, Firmament}
+  return { Soul, ContainerSoul, Plant, FarmPlot, Firmament}

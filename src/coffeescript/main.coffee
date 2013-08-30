@@ -8,8 +8,8 @@ requirejs.config
   
 # Javascript, you fucking garbage fucker 
 
-define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", "lib/rot.js", "lib/underscore.js", "lib/zepto.js"], 
-  (Soul, Player, Manager, { Geometry }, Narrative, Plants) =>
+define(["soul", "player", "manager", "geometry", "narrative", "views", "data/plants.js", "lib/rot.js", "lib/underscore.js", "lib/zepto.js"], 
+  (Soul, Player, Manager, { Geometry }, Narrative, Views, Plants) =>
   
     @clicker = (e) =>
       # [x, y] = @display.eventToPosition(e)
@@ -55,12 +55,26 @@ define(["soul", "player", "manager", "geometry", "narrative", "data/plants.js", 
       recipe: Plants.tridentvine
     }
     
+    @view = new Views.InventoryTable {
+      model: @player.inventory
+      el: $('#inventory')
+    }
+    
+    @player.inventory.add(new Soul.Plant {
+      geometry: Geometry.indeterminate
+      recipe: Plants.tridentvine
+    })
+    
+    @player.inventory.add(new Soul.Plant {
+      geometry: Geometry.indeterminate
+      recipe: Plants.joyalflower
+    })
+    
     @manager.toplevelSouls.push(@firmament)
     @manager.toplevelSouls.push(@farm)
     @manager.toplevelSouls.push(@otherplant)
     
     $("#canvas-placeholder").replaceWith(@canvas)
-    @manager.invalidateInventory()
     
     @canvas.setAttribute('tabindex', 0)
     @canvas.onclick = @clicker

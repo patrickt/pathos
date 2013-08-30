@@ -7,6 +7,8 @@ define (require, exports, module) ->
   { Soul } = require('soul')
   { Body } = require('body')
   
+  require('util')
+  
   class PlayerBody extends Body
     
     renderRecursively: (display) =>
@@ -23,6 +25,14 @@ define (require, exports, module) ->
       manager.invalidateBodies()
     
   class Player extends Soul
+    
+    initialize: ->
+      @set('inventory', new Backbone.Collection([], { model: Soul }))
+        
+    
+    @observable 'inventory'
+    
+    
     bodyClass: PlayerBody
     
   

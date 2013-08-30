@@ -50,36 +50,30 @@ define (require, exports, module ) ->
           @pluck()
         else
           _(@soulsToBodies.values()).map( (v) -> v.handleEvent(e))
-      
-    invalidateInventory: ->
-      $("#inventory").empty()
-      for key in _.keys(plants)
-        ident = plants[key].identifier
-        $("#inventory").append($("<input type='radio' name='selected' id='#{ident}'>"))
-        $("#inventory").append($("<label for='#{ident}'>#{plants[key].displayName}</label>"))
-        $("#inventory").append($("<br>"))
-      $("#inventory").children(':first-child').prop('defaultChecked', true)
-      
+    
     pluck: ->
       pos = @player.geometry
       item = @recursivelyHitTest(pos.x, pos.y).soul
       if item and not item.isFixed
-        alert('YOU HAVE GAINED A %s!'.format(item.displayName))
+        alert('YOU HAVE GAINED A %s!'.format(item.get('recipe').displayName))
         @removeSoulRecursively(item)
+        item.geometry = Geometry.indeterminate
+        @player.inventory.add(item)
         
     sow: ->
       [x, y] = [@player.geometry.x, @player.geometry.y]
       rep = @recursivelyHitTest(x, y)
-      toPlant = plants["marsh_beans"]
+      
+      if @player.inventory.isEmpty()
+        alert("Nothin' to plant, chief")
+        return
       
       if rep.soul instanceof Soul.FarmPlot
+        toPlant = @player.inventory.pop()
         xc = x - rep.geometry.x
         yc = y - rep.geometry.y
-        plant = new Soul.Plant
-          geometry: new Geometry(xc, yc, 1, 1, 1)
-          recipe: toPlant
-        
-        rep.soul.addSoul(plant)
+        toPlant.geometry = new Geometry(xc, yc, 1, 1, 1)
+        rep.soul.addSoul(toPlant)
         @renderRecursively()
       
     

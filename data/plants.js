@@ -20,5 +20,10 @@ define({
     "char": "☄",
     "color": "deepskyblue",
     "traits": ["sharp", "hardy", "noxious"]
+  },
+  "joyalflower": {
+    "displayName": "Joyal flower",
+    "char": "✿",
+    "color": "red"
   }
 });
