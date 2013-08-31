@@ -53,7 +53,7 @@ define (require, exports, module ) ->
     
     pluck: ->
       pos = @player.geometry
-      item = @recursivelyHitTest(pos.x, pos.y).soul
+      item = @recursivelyHitTest(pos.origin).soul
       if item and not item.isFixed
         alert('YOU HAVE GAINED A %s!'.format(item.get('recipe').displayName))
         @removeSoulRecursively(item)
@@ -61,14 +61,14 @@ define (require, exports, module ) ->
         @player.inventory.add(item)
         
     sow: ->
-      [x, y] = [@player.geometry.x, @player.geometry.y]
-      rep = @recursivelyHitTest(x, y)
+      rep = @recursivelyHitTest(player.geometry.origin)
       
       if @player.inventory.isEmpty()
         alert("Nothin' to plant, chief")
         return
       
       if rep.soul instanceof Soul.FarmPlot
+        [x, y] = @player.geometry.origin
         toPlant = @player.inventory.pop()
         xc = x - rep.geometry.x
         yc = y - rep.geometry.y
@@ -87,11 +87,11 @@ define (require, exports, module ) ->
       @p_generateTopLevelBodies()
       @bodyForSoul(soul, createIfNecessary: true).renderRecursively(@display) for soul in _(@toplevelSouls).sortBy( (s) -> s.geometry.z)
           
-    recursivelyHitTest: (x, y) ->
+    recursivelyHitTest: (pt) ->
       souls = _(@toplevelSouls).sortBy('geometry.z').reverse()
       for soul in souls
         body = this.bodyForSoul(soul)
-        hitBody = body.recursivelyHitTest(x, y)
+        hitBody = body.recursivelyHitTest(pt)
         if hitBody then return hitBody
       null
   

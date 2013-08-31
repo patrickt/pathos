@@ -10,10 +10,10 @@ define (require, exports, module) ->
   # abstract
   class Body
     constructor: (@soul, @manager) ->
-      assert.ok(arguments...)
+      _(arguments).map(assert.ok)
     
-    recursivelyHitTest: (x, y) ->
-      if @soul.geometry.containsPoint(x,y) then this else null
+    recursivelyHitTest: (pt) ->
+      if @soul.geometry.containsPoint(pt) then this else null
       
     renderRecursively: (display) ->
       assert.ok(false, "Body.renderRecursively is abstract")
@@ -33,9 +33,9 @@ define (require, exports, module) ->
   
   class ContainerBody extends Body
     
-    recursivelyHitTest: (x, y) ->
-      [cx, cy] = @convertAbsolutePointToRelative([x, y])
-      _.find(@childBodies, (child) -> child.geometry.containsPoint(cx, cy)) or super
+    recursivelyHitTest: ([x, y]) ->
+      arr = @convertAbsolutePointToRelative([x, y])
+      _.find(@childBodies, (child) -> child.geometry.containsPoint(arr)) or super
     
     @property 'childBodies', 
       get: -> (@manager.bodyForSoul(ch, createIfNecessary: true) for ch in @soul.childSouls)

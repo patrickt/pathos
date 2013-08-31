@@ -26,7 +26,7 @@ define (require) ->
     toString: ->
       "[%s: x = %s, y = %s, width = %s, height = %s]".format(this.constructor.name, @x, @y, @w, @h)
     
-    containsPoint: (x, y) -> (@x <= x < (@x + @w)) and (@y <= y < (@y + @h))
+    containsPoint: ([x, y]) -> (@x <= x < (@x + @w)) and (@y <= y < (@y + @h))
       
     byAdding: (g) ->
       assert.ok(g)
