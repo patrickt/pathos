@@ -5,19 +5,23 @@
 define (require, exports, module) ->
   require('lib/backbone.js')
   require('lib/zepto.js')
+  require('util')
   
   class InventoryTable extends Backbone.View
+    
+    @property: 'manager'
     
     tagName: "div"
     id: "inventory"
     
     initialize: ->
-      @listenTo(@model, "add", @render);
-      @listenTo @model, "remove", (item) ->
-        this.$el.children().eq(-1).remove()
+      @listenTo(@model, "add", @render)
+      @listenTo(@model, "remove", @render)
     
-    render: (item) ->
-      this.$el.append($("<p>").html(item.get('recipe').displayName)) if item and item.get('recipe')
+    render: (item, allItems) ->
+      this.$el.empty()
+      allItems.map( (i) => 
+        @manager.bodyForSoul(i, createIfNecessary:true).renderHTML(this.$el))
       
     stopListening: ->
       super

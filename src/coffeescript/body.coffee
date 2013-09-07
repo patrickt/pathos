@@ -24,6 +24,8 @@ define (require, exports, module) ->
     @property 'geometryInParent',
       get: -> @soul.geometryInParent
       
+    renderHTML: ->
+      
     convertAbsolutePointToRelative: (point) -> point
     
     handleEvent: (e) -> false
@@ -46,8 +48,11 @@ define (require, exports, module) ->
   
   class ItemBody extends Body
     
+    renderHTML: ($el) ->
+      $el.append($("<p>").html(@soul.recipe.displayName))
+    
     renderRecursively: (display) ->
-      display.draw(@geometryInParent.x, @geometryInParent.y, @soul.get('recipe').char, ROT.Color.toHex(ROT.Color.fromString(@soul.get('recipe').color)))
+      display.draw(@geometryInParent.x, @geometryInParent.y, @soul.recipe.char, ROT.Color.toHex(ROT.Color.fromString(@soul.get('recipe').color)))
   
   class FarmPlotBody extends ContainerBody
     

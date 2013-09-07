@@ -8,8 +8,8 @@ requirejs.config
   
 # Javascript, you fucking garbage fucker 
 
-define(["soul", "player", "manager", "geometry", "narrative", "views", "data/plants.js", "lib/rot.js", "lib/underscore.js", "lib/zepto.js"], 
-  (Soul, Player, Manager, { Geometry }, Narrative, Views, Plants) =>
+define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar", "data/plants.js", "lib/rot.js", "lib/underscore.js", "lib/zepto.js"], 
+  (Soul, Player, Manager, { Geometry }, Narrative, Views, Calendar, Plants) =>
   
     @clicker = (e) =>
       # [x, y] = @display.eventToPosition(e)
@@ -59,6 +59,8 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "data/pla
       model: @player.inventory
       el: $('#inventory')
     }
+    
+    view.manager = @manager
     
     @player.inventory.add(new Soul.Plant {
       geometry: Geometry.indeterminate

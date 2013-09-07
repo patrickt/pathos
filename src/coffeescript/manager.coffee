@@ -36,6 +36,7 @@ define (require, exports, module ) ->
       @renderRecursively()
         
     bodyForSoul: (soul, opts = {}) ->
+      assert.ok(soul)
       body = @soulsToBodies.get(soul)
       if opts.createIfNecessary and not body
         body = new (soul.bodyClass)(soul, this)

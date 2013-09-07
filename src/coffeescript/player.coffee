@@ -26,12 +26,10 @@ define (require, exports, module) ->
     
   class Player extends Soul
     
-    initialize: ->
-      @set('inventory', new Backbone.Collection([], { model: Soul }))
-        
-    
     @observable 'inventory'
     
+    initialize: ->
+      @inventory = new Backbone.Collection([], { model: Soul })
     
     bodyClass: PlayerBody
     
