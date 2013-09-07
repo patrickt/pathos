@@ -15,11 +15,14 @@ define (require, exports, module) ->
       display.draw(@soul.geometry.x, @soul.geometry.y, '@')
     
     handleEvent: (e) ->
+      
+      mult = if e.shiftKey then 10 else 1
+      
       switch e.keyCode
-        when ROT.VK_LEFT  then @geometry.x -= 1
-        when ROT.VK_RIGHT then @geometry.x += 1
-        when ROT.VK_DOWN  then @geometry.y += 1
-        when ROT.VK_UP    then @geometry.y -= 1
+        when ROT.VK_LEFT  then @geometry.x -= mult
+        when ROT.VK_RIGHT then @geometry.x += mult
+        when ROT.VK_DOWN  then @geometry.y += mult
+        when ROT.VK_UP    then @geometry.y -= mult
         else return false
       
       manager.invalidateBodies()

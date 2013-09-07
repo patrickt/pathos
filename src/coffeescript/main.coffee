@@ -10,14 +10,7 @@ requirejs.config
 
 define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar", "data/plants.js", "lib/rot.js", "lib/underscore.js", "lib/zepto.js"], 
   (Soul, Player, Manager, { Geometry }, Narrative, Views, Calendar, Plants) =>
-  
-    @clicker = (e) =>
-      # [x, y] = @display.eventToPosition(e)
-      # alert('x = ' + x + ', y =' + y)
-      # fudge = @manager.recursivelyHitTest(x,y)
-      # if fudge
-      #   alert(fudge.toString())
-
+    
     ROT.Display.Rect.cache = true
     @display = new ROT.Display(width: 80, height: 25, fontSize:24)
     @canvas = @display.getContainer()
