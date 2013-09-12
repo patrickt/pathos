@@ -22,9 +22,5 @@ define (require, exports, module) ->
       this.$el.empty()
       allItems.map( (i) => 
         @manager.bodyForSoul(i, createIfNecessary:true).renderHTML(this.$el))
-      
-    stopListening: ->
-      super
-      @stopListening(@model)
     
   return { InventoryTable }

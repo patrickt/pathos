@@ -6,6 +6,7 @@ define (require, exports, module) ->
   
   require('lib/zepto.js')
   require('lib/backbone.js')
+  require('lib/rot.js')
   
   Body   = require('body')
   assert = require('lib/chai.js').assert
@@ -60,7 +61,12 @@ define (require, exports, module) ->
     @observable 'color'
 
   class Firmament extends Soul
-  
+    
+    constructor: ->
+      super
+      @map = new ROT.Map.Cellular(80, 25)
+      @map.randomize(0.1)
+    
     bodyClass: Body.FirmamentBody
     
     @observable 'color'

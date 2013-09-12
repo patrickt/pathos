@@ -58,13 +58,23 @@ define (require, exports, module) ->
     
     renderRecursively: (display) ->
       @soul.geometry.eachSquare (x, y) =>
-        display.draw(x, y, '=', ROT.Color.toHex(@soul.color))
+        display.draw(x, y, '~', ROT.Color.toHex(@soul.color))
       super
   
   class FirmamentBody extends Body
     
     renderRecursively: (display) ->
+      map = @soul.map._map
+      soulColor = @soul.color
       @soul.geometry.eachSquare (x, y) =>
-        display.draw(x, y, '.', ROT.Color.toHex(@soul.color))
+        [char, color] = [undefined, undefined]
+        if map[x]?[y] 
+          char = ','
+          color = ROT.Color.toHex(ROT.Color.fromString("yellow"))
+        else
+          char = '.'
+          color = ROT.Color.toHex(soulColor)
+        display.draw(x, y, char, color)
+      
     
   return { Body, ItemBody, FarmPlotBody, FirmamentBody }

@@ -17,24 +17,26 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar
     @canvas.id = "main-canvas"
     
     @firmament = new Soul.Firmament({
-      geometry: new Geometry(0, 0, 80, 35, -10)
-      color:    ROT.Color.fromString("goldenrod")
+      geometry: new Geometry([0, 0, -10], [80, 35])
+      color:    ROT.Color.fromString("rgb(10, 180, 10)")
     })
     
+    console.log(@firmament.z)
+    
     @farm = new Soul.FarmPlot {
-      geometry: new Geometry(50, 10, 4, 4, 1)
-      color: ROT.Color.fromString("green")
+      geometry: new Geometry([50, 10, 1], [4, 4])
+      color: ROT.Color.fromString("saddlebrown")
     }
     
     @testplant = new Soul.Plant {
-      geometry: new Geometry(2,0, 1, 1, 2)
+      geometry: new Geometry([2,0,2])
       recipe: Plants.marsh_beans
     }
     
     @farm.addSoul(@testplant)
     
     @player = new Player.Player {
-      geometry: new Geometry(10, 10, 1, 1, 5)
+      geometry: new Geometry([10, 10, 5])
     }
 
     @manager = new Manager.Manager {
@@ -44,7 +46,7 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar
     }
     
     @otherplant = new Soul.Plant {
-      geometry: new Geometry(20, 20, 1, 1, 2),
+      geometry: new Geometry([20, 20, 2], [1, 1]),
       recipe: Plants.tridentvine
     }
     

@@ -73,7 +73,7 @@ define (require, exports, module ) ->
         toPlant = @player.inventory.pop()
         xc = x - rep.geometry.x
         yc = y - rep.geometry.y
-        toPlant.geometry = new Geometry(xc, yc, 1, 1, 1)
+        toPlant.geometry = new Geometry([xc, yc, 1], [1, 1])
         rep.soul.addSoul(toPlant)
         @renderRecursively()
       
