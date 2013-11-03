@@ -51,11 +51,17 @@ define (require, exports, module) ->
       super
       assert.ok(this.geometry)
       assert.ok(this.recipe)
-       
     
     @observable 'geometry'
     @observable 'recipe'
     @observable 'growth'
+    
+    wasEatenBy: (figure) ->
+      traits = @recipe.traits
+      if "toxic" in traits
+        figure.health -= 20
+      if "medicinal" in traits
+        figure.health += 20
     
     growthStages: 4
     

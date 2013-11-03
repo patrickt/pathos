@@ -43,12 +43,19 @@ define (require, exports, module ) ->
         body = new (soul.bodyClass)(soul, this)
         @soulsToBodies.put(soul, body)
       return body
+      
+    eat: ->
+      toEat = @player.inventory.pop()
+      if toEat
+        toEat.wasEatenBy(@player)
     
     keyDown: (e) ->
       switch e.keyCode
         when ROT.VK_Q
           @sow()
-        when ROT.VK_E 
+        when ROT.VK_E
+          @eat()
+        when ROT.VK_R 
           @pluck()
         when ROT.VK_SPACE
           @scheduler.next()?.act()

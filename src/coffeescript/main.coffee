@@ -38,6 +38,8 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar
     @player = new Player.Player {
       geometry: new Geometry([10, 10, 5])
     }
+    
+    @player.save
 
     @manager = new Manager.Manager {
       canvas:  @canvas
@@ -53,6 +55,11 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar
     @view = new Views.InventoryTable {
       model: @player.inventory
       el: $('#inventory')
+    }
+    
+    @health = new Views.HealthDisplay { 
+      model: @player
+      el: $('#health')
     }
     
     view.manager = @manager

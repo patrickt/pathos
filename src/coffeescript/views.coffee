@@ -22,5 +22,17 @@ define (require, exports, module) ->
       this.$el.empty()
       allItems.map( (i) => 
         @manager.bodyForSoul(i, createIfNecessary:true).renderHTML(this.$el))
+  
+  class HealthDisplay extends Backbone.View
     
-  return { InventoryTable }
+    tagName: "div"
+    id: "health"
+    
+    initialize: ->
+      @render @model
+      @listenTo(@model, "change", @render)
+    
+    render: (p) ->
+      this.$el.text("your health is #{p.health}")
+    
+  return { InventoryTable, HealthDisplay }
