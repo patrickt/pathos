@@ -30,7 +30,7 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar
     
     @testplant = new Soul.Plant {
       geometry: new Geometry([2,0,2])
-      recipe: Plants.marsh_beans
+      recipe: Plants.christ_berries
     }
     
     @farm.addSoul(@testplant)
@@ -47,7 +47,7 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar
     
     @otherplant = new Soul.Plant {
       geometry: new Geometry([20, 20, 2], [1, 1]),
-      recipe: Plants.tridentvine
+      recipe: Plants.amaranthine
     }
     
     @view = new Views.InventoryTable {
@@ -59,12 +59,12 @@ define(["soul", "player", "manager", "geometry", "narrative", "views", "calendar
     
     @player.inventory.add(new Soul.Plant {
       geometry: Geometry.indeterminate
-      recipe: Plants.tridentvine
+      recipe: Plants.amaranthine
     })
     
     @player.inventory.add(new Soul.Plant {
       geometry: Geometry.indeterminate
-      recipe: Plants.joyalflower
+      recipe: Plants.devil_grass
     })
     
     @manager.toplevelSouls.push(@firmament)

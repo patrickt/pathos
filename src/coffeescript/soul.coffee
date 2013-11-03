@@ -47,8 +47,17 @@ define (require, exports, module) ->
   
   class Plant extends Soul
     
+    initialize: ->
+      super
+      assert.ok(this.geometry)
+      assert.ok(this.recipe)
+       
+    
     @observable 'geometry'
     @observable 'recipe'
+    @observable 'growth'
+    
+    growthStages: 4
     
     isFixed: false
 

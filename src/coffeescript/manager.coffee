@@ -2,28 +2,29 @@
 
 define (require, exports, module ) ->
   
+  require('lib/rot.js')
   require("lib/jshashtable.js")
   require('lib/underscore.js')
   require('lib/zepto.js')
   
-  assert       = require('lib/chai.js').assert
   util         = require("util")
   Soul         = require ("soul")
+  { assert }   = require('lib/chai.js')
   { Geometry } = require("geometry")
   
   plants = require("data/plants.js")
-  
   
   class Manager
     constructor: (options) ->
       {@canvas, @player, @display} = options
       @toplevelSouls = [ @player ]
       @soulsToBodies = new Hashtable()
+      @scheduler = new ROT.Scheduler.Simple()
+      @engine = new ROT.Engine(@scheduler)
     
     initialize: -> 
       @toplevelSouls = [ @player ]
       @soulsToBodies = new Hashtable()
-    
     
     p_generateTopLevelBodies: =>
       for soul in @toplevelSouls
@@ -49,6 +50,8 @@ define (require, exports, module ) ->
           @sow()
         when ROT.VK_E 
           @pluck()
+        when ROT.VK_SPACE
+          @scheduler.next()?.act()
         else
           _(@soulsToBodies.values()).map( (v) -> v.handleEvent(e))
     

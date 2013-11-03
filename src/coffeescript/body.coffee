@@ -29,6 +29,8 @@ define (require, exports, module) ->
     convertAbsolutePointToRelative: (point) -> point
     
     handleEvent: (e) -> false
+    
+    act: -> false
       
     toString: ->
       "[%s : %s]".format(@constructor.name, @soul.toString())
